@@ -1,3 +1,4 @@
 module.exports = {
-  adminRouter: require("./admin.router"),
+  chairpersonRouter: require("./chairperson.router"),
+  authRouter: require("./auth.router"),
 };
