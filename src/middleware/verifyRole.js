@@ -1,3 +1,7 @@
+/**
+ * @param {string} requiredRole
+ * @returns {import("express").RequestHandler}
+ */
 const verifyRole = (requiredRole) => (req, res, next) => {
   if (req.user) {
     console.log(req.user);

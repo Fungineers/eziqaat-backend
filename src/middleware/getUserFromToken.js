@@ -1,6 +1,10 @@
 import { verify } from "jsonwebtoken";
 import { connection } from "../db";
-
+/**
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ */
 const getUserFromToken = (req, res, next) => {
   let user = null;
   const authorization = req.headers.authorization;

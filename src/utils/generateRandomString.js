@@ -1,3 +1,7 @@
+/**
+ * @param {number} length
+ * @returns {string}
+ */
 const generateRandomString = (length) => {
   const chars =
     "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
