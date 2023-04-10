@@ -1,12 +1,12 @@
-const jwt = require("jsonwebtoken");
-const { connection } = require("../db");
+import { verify } from "jsonwebtoken";
+import { connection } from "../db";
 
 const getUserFromToken = (req, res, next) => {
   let user = null;
   const authorization = req.headers.authorization;
   if (authorization) {
     const [, token] = authorization.split(" ");
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = verify(token, process.env.JWT_SECRET);
     if (payload) {
       const { id } = payload;
       const query = `
@@ -33,4 +33,4 @@ const getUserFromToken = (req, res, next) => {
   }
 };
 
-module.exports = getUserFromToken;
+export default getUserFromToken;

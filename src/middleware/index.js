@@ -1,4 +1,2 @@
-module.exports = {
-  getUserFromToken: require("./getUserFromToken"),
-  verifyRole: require("./verifyRole"),
-};
+export { default as getUserFromToken } from "./getUserFromToken";
+export { default as verifyRole } from "./verifyRole";

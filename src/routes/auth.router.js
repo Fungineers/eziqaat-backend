@@ -1,6 +1,6 @@
-const { Router } = require("express");
-const { connection } = require("../db");
-const jwt = require("jsonwebtoken");
+import { Router } from "express";
+import { connection } from "../db";
+import { sign } from "jsonwebtoken";
 
 const router = Router();
 
@@ -23,7 +23,7 @@ router.post("/signin", (req, res) => {
         message: "Incorrect email or password",
       });
     }
-    const token = jwt.sign(
+    const token = sign(
       { id: user.id, role: user.role, active: !!user.active },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
@@ -32,4 +32,4 @@ router.post("/signin", (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

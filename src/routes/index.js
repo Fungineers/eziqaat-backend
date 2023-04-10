@@ -1,4 +1,2 @@
-module.exports = {
-  chairpersonRouter: require("./chairperson.router"),
-  authRouter: require("./auth.router"),
-};
+export { default as chairpersonRouter } from "./chairperson.router";
+export { default as authRouter } from "./auth.router";

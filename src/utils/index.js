@@ -1,3 +1,1 @@
-module.exports = {
-  generateRandomString: require("./generateRandomString"),
-};
+export { default as generateRandomString } from "./generateRandomString";

@@ -1,8 +1,8 @@
-const { Router } = require("express");
-const { connection } = require("../db");
-const { roles } = require("../constants");
-const { generateRandomString } = require("../utils");
-const { verifyRole } = require("../middleware");
+import { Router } from "express";
+import { connection } from "../db";
+import { roles } from "../constants";
+import { generateRandomString } from "../utils";
+import { verifyRole } from "../middleware";
 
 const router = Router();
 
@@ -31,4 +31,4 @@ router.post("/create-worker", (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

@@ -23,4 +23,4 @@ const verifyRole = (requiredRole) => (req, res, next) => {
   }
 };
 
-module.exports = verifyRole;
+export default verifyRole;

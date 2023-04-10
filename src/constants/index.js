@@ -1,3 +1,1 @@
-module.exports = {
-  roles: require("./roles"),
-};
+export { default as roles } from "./roles";
