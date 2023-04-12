@@ -9,10 +9,9 @@ const router = Router();
 router.all("*", verifyRole(roles.CHAIRPERSON));
 
 router.post("/create-worker", (req, res) => {
-  const { firstName, lastName, email, cnic } = req.body;
+  const { firstName, lastName, email, cnic, phone } = req.body;
 
   const password = generateRandomString(8);
-  console.log(password);
   const role = roles.WORKER;
   const active = false;
 
