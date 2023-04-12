@@ -1,9 +1,9 @@
 import cors from "cors";
 import { config } from "dotenv";
 import express, { json, urlencoded } from "express";
-import { connectDb } from "./db";
-import { getUserFromToken } from "./middleware";
-import { chairpersonRouter, authRouter } from "./routes";
+import { connectDb } from "@/database";
+import { getUserFromToken } from "@/middleware";
+import { chairpersonRouter, authRouter } from "@/routes";
 
 config();
 

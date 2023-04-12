@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { connection } from "../db";
+import { connection } from "@/database";
 import { sign } from "jsonwebtoken";
 
 const router = Router();

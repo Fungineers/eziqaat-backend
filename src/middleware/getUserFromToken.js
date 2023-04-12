@@ -1,5 +1,5 @@
 import { verify } from "jsonwebtoken";
-import { connection } from "../db";
+import { connection } from "@/database";
 /**
  * @param {import("express").Request} req
  * @param {import("express").Response} res

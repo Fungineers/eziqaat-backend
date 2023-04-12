@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import { createConnection } from "mysql";
+import * as queries from "./queries";
 
 config();
 
@@ -23,3 +24,5 @@ export const connectDb = () => {
     );
   });
 };
+
+export { queries };

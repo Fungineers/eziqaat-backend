@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { connection } from "../db";
-import { roles } from "../constants";
-import { generateRandomString } from "../utils";
-import { verifyRole } from "../middleware";
+import { connection, queries } from "@/database";
+import { roles } from "@/constants";
+import { generateRandomString } from "@/utils";
+import { verifyRole } from "@/middleware";
 
 const router = Router();
 
@@ -13,10 +13,16 @@ router.post("/create-worker", (req, res) => {
 
   const password = generateRandomString(8);
   const role = roles.WORKER;
-  const active = false;
 
-  const query = `CALL add_user(?, ?, ?, ?, ?, ?, ?)`;
-  const params = [firstName, lastName, email, cnic, password, role, active];
+  const { query, params } = queries.createUser({
+    firstName,
+    lastName,
+    email,
+    role,
+    phone,
+    cnic,
+    password,
+  });
 
   connection.query(query, params, (error, results) => {
     if (error) {

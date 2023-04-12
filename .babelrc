@@ -1,4 +1,13 @@
 {
   "presets": ["es2015", "stage-2"],
-  "plugins": []
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "@": "./src"
+        }
+      }
+    ]
+  ]
 }
