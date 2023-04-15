@@ -3,6 +3,7 @@ const regexps = {
   email: /^\S+@\S+\.\S+$/g,
   password:
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,20}$/g,
+  cnic: /^([0-9]{5})[\-]([0-9]{7})[\-]([0-9]{1})+/,
 };
 
 export default regexps;

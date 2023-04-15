@@ -1,13 +1,12 @@
 import { Router } from "express";
-import { connection } from "@/database";
+import { connection, queries } from "@/database";
 import { sign } from "jsonwebtoken";
 
 const router = Router();
 
 router.post("/signin", (req, res) => {
   const { email, password } = req.body;
-  const query = `CALL authenticate(?, ?)`;
-  const params = [email, password];
+  const { query, params } = queries.authenticateUser({ email, password });
   connection.query(query, params, (error, results) => {
     if (error) {
       console.log(error);
@@ -23,11 +22,9 @@ router.post("/signin", (req, res) => {
         message: "Incorrect email or password",
       });
     }
-    const token = sign(
-      { id: user.id, role: user.role, active: !!user.active },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    const token = sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
     return res.status(201).json({ token, user });
   });
 });

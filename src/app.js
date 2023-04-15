@@ -3,7 +3,11 @@ import { config } from "dotenv";
 import express, { json, urlencoded } from "express";
 import { connectDb } from "@/database";
 import { getUserFromToken } from "@/middleware";
-import { chairpersonRouter, authRouter } from "@/routes";
+import {
+  chairpersonRouter,
+  authRouter,
+  generalSecretaryRouter,
+} from "@/routes";
 
 config();
 
@@ -17,8 +21,9 @@ const port = process.env.port || 3001;
 
 app.all("*", getUserFromToken);
 
-app.use("/chairperson", chairpersonRouter);
 app.use("/auth", authRouter);
+app.use("/general-secretary", generalSecretaryRouter);
+app.use("/chairperson", chairpersonRouter);
 
 app.listen(port, () => {
   console.log(`⚡ Server is listening on port ${port}`);
