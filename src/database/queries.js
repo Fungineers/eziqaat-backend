@@ -29,3 +29,9 @@ export const createArea = ({ name }) => {
   const params = [name];
   return { query, params };
 };
+
+export const updateArea = ({ id, name }) => {
+  const query = `UPDATE area SET name = ? WHERE id = ?; SELECT * FROM area WHERE id = ?`;
+  const params = [name, id, id];
+  return { query, params };
+};

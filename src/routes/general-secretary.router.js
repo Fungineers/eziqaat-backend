@@ -25,6 +25,22 @@ router.post("/area", (req, res) => {
   });
 });
 
+router.put("/area", (req, res) => {
+  const { id, name } = req.body;
+  const { query, params } = queries.updateArea({ id, name });
+  connection.query(query, params, (error, results) => {
+    if (error) {
+      console.log(error);
+      return res.status(400).json({
+        error: "Couldn't update area",
+        message: error.sqlMessage,
+      });
+    }
+    const area = results[0][0];
+    return res.status(200).json({ area });
+  });
+});
+
 router.post("/chairperson", (req, res) => {
   const { firstName, lastName, email, cnic, phone } = req.body;
 
