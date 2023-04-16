@@ -29,11 +29,9 @@ router.post("/worker", (req, res) => {
   connection.query(query, params, (error, results) => {
     if (error) {
       console.log(error);
-      return res
-        .status(400)
-        .json({ error: "Couldn't create worker", message: error.sqlMessage });
+      return res.status(400).json({ message: "Couldn't create worker", error });
     }
-    const user = results[0][0];
+    const user = results[4][0];
     return res.status(200).json({ user });
   });
 });

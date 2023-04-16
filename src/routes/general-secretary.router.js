@@ -8,39 +8,6 @@ const router = Router();
 
 router.all("*", verifyRole(roles.GENERAL_SECRETARY));
 
-router.post("/area", (req, res) => {
-  const { name } = req.body;
-  const { query, params } = queries.createArea({ name });
-
-  connection.query(query, params, (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(400).json({
-        error: "Couldn't create area",
-        message: error.sqlMessage,
-      });
-    }
-    const area = results[0][0];
-    return res.status(200).json({ area });
-  });
-});
-
-router.put("/area", (req, res) => {
-  const { id, name } = req.body;
-  const { query, params } = queries.updateArea({ id, name });
-  connection.query(query, params, (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(400).json({
-        error: "Couldn't update area",
-        message: error.sqlMessage,
-      });
-    }
-    const area = results[0][0];
-    return res.status(200).json({ area });
-  });
-});
-
 router.post("/chairperson", (req, res) => {
   const { firstName, lastName, email, cnic, phone } = req.body;
 
@@ -64,9 +31,9 @@ router.post("/chairperson", (req, res) => {
       console.log(error);
       return res
         .status(400)
-        .json({ error: "Couldn't create worker", message: error.sqlMessage });
+        .json({ message: "Couldn't create chairperson", error });
     }
-    const user = results[0][0];
+    const user = results[4][0];
     return res.status(200).json({ user });
   });
 });

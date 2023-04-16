@@ -10,12 +10,10 @@ router.post("/signin", (req, res) => {
   connection.query(query, params, (error, results) => {
     if (error) {
       console.log(error);
-      return res
-        .status(401)
-        .json({ error: "Couldn't sign in", message: error.sqlMessage });
+      return res.status(401).json({ message: "Couldn't sign in", error });
     }
     console.log(results);
-    const user = results[0][0];
+    const user = results[0];
     if (!user) {
       return res.status(401).json({
         error: "Couldn't sign in",

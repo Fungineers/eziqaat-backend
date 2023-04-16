@@ -7,6 +7,7 @@ import {
   chairpersonRouter,
   authRouter,
   generalSecretaryRouter,
+  areaRouter,
 } from "@/routes";
 
 config();
@@ -24,6 +25,7 @@ app.all("*", getUserFromToken);
 app.use("/auth", authRouter);
 app.use("/general-secretary", generalSecretaryRouter);
 app.use("/chairperson", chairpersonRouter);
+app.use("/area", areaRouter);
 
 app.listen(port, () => {
   console.log(`⚡ Server is listening on port ${port}`);
