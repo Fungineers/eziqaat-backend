@@ -98,3 +98,16 @@ export const getAreaById = ({ id }) => {
   const params = [id];
   return { query, params };
 };
+
+export const assignAreaToChairperson = ({ areaId, chairpersonId }) => {
+  const query = `
+    SET @id := REPLACE(UUID(), "-", "");
+    SET @createdAt := UTC_TIMESTAMP();
+    INSERT INTO areachairperson (id, areaId, chairpersonId, createdAt)
+      VALUES(@id, ?, ?, @createdAt);
+    SELECT * FROM areawithchairperson
+      WHERE id = @id;
+  `;
+  const params = [areaId, chairpersonId];
+  return { query, params };
+};

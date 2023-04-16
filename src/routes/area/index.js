@@ -81,4 +81,28 @@ router.delete("/:id", verifyRole(roles.GENERAL_SECRETARY), (req, res) => {
   });
 });
 
+router.post(
+  "/:id/chairperson/:chairpersonId",
+  verifyRole(roles.GENERAL_SECRETARY),
+  (req, res) => {
+    const { id: areaId, chairpersonId } = req.params;
+
+    const { query, params } = queries.assignAreaToChairperson({
+      areaId,
+      chairpersonId,
+    });
+
+    connection.query(query, params, (error, results) => {
+      if (error) {
+        console.log(error);
+        return res
+          .status(400)
+          .json({ message: "Couldn't assign chairperson to area", error });
+      }
+      const data = results[3][0];
+      return res.status(200).json({ data });
+    });
+  }
+);
+
 export default router;

@@ -6,13 +6,11 @@ import { verifyRole } from "@/middleware";
 
 const router = Router();
 
-router.all("*", verifyRole(roles.CHAIRPERSON));
-
-router.post("/worker", (req, res) => {
+router.post("/", verifyRole(roles.GENERAL_SECRETARY), (req, res) => {
   const { firstName, lastName, email, cnic, phone } = req.body;
 
   const password = generateRandomString(8);
-  const role = roles.WORKER;
+  const role = roles.CHAIRPERSON;
 
   console.log(password);
 
@@ -29,7 +27,9 @@ router.post("/worker", (req, res) => {
   connection.query(query, params, (error, results) => {
     if (error) {
       console.log(error);
-      return res.status(400).json({ message: "Couldn't create worker", error });
+      return res
+        .status(400)
+        .json({ message: "Couldn't create chairperson", error });
     }
     const user = results[4][0];
     return res.status(200).json({ user });

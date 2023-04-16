@@ -23,8 +23,6 @@ const port = process.env.port || 3001;
 app.all("*", getUserFromToken);
 
 app.use("/auth", authRouter);
-app.use("/general-secretary", generalSecretaryRouter);
-app.use("/chairperson", chairpersonRouter);
 app.use("/area", areaRouter);
 
 app.listen(port, () => {
