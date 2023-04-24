@@ -125,9 +125,22 @@ export const unassignAreaToChairperson = ({ areaId, chairpersonId }) => {
   return { query, params };
 };
 
+export const getUnassignedAreas = ({ limit, offset }) => {
+  const query = `
+    SELECT a.* FROM areachairperson AS ac 
+      INNER JOIN area AS a 
+      ON a.id = ac.areaId 
+      WHERE removedAt is NULL
+      LIMIT ? OFFSET ?
+  `;
+  const params = [limit, offset];
+  return { query, params };
+};
+
 export const getAreasWithChairperson = ({ limit, offset }) => {
   const query = `
     SELECT * FROM areawithchairperson
+      WHERE removedAt IS NULL
       ORDER BY areaName ASC
       LIMIT ? OFFSET ?
   `;

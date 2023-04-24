@@ -20,6 +20,35 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/with-chairperson", (req, res) => {
+  const limit = 20;
+  const offset = +req.query.offset || 0;
+  const { query, params } = queries.getAreasWithChairperson({ limit, offset });
+  connection.query(query, params, (error, areasWithChairperson) => {
+    if (error) {
+      console.log(error);
+      return res.status(400).json({ message: "Error fetching data", error });
+    }
+    return res.status(200).json({ areasWithChairperson });
+  });
+});
+
+router.get("/unassigned", (req, res) => {
+  const limit = 20;
+  const offset = +req.query.offset || 0;
+  const { query, params } = queries.getUnassignedAreas({ limit, offset });
+  connection.query(query, params, (error, unassignedAreas) => {
+    if (error) {
+      console.log(error);
+      return res.status(400).json({
+        message: "Something went wrong",
+        error,
+      });
+    }
+    return res.status(200).json({ unassignedAreas });
+  });
+});
+
 router.get("/:id", (req, res) => {
   const { id } = req.params;
 
@@ -129,18 +158,5 @@ router.delete(
     });
   }
 );
-
-router.get("/with/chairperson", (req, res) => {
-  const limit = 20;
-  const offset = +req.query.offset || 0;
-  const { query, params } = queries.getAreasWithChairperson({ limit, offset });
-  connection.query(query, params, (error, data) => {
-    if (error) {
-      console.log(error);
-      return res.status(400).json({ message: "Error fetching data", error });
-    }
-    return res.status(200).json({ data });
-  });
-});
 
 export default router;
