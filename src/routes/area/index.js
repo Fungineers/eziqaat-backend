@@ -1,7 +1,7 @@
-const { roles } = require("@/constants");
-const { queries, connection } = require("@/database");
-const { verifyRole } = require("@/middleware");
-const { Router } = require("express");
+import { roles } from "@/constants";
+import { queries, connection } from "@/database";
+import { verifyRole } from "@/middleware";
+import { Router } from "express";
 
 const router = Router();
 
@@ -38,7 +38,7 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.post("/", verifyRole(roles.GENERAL_SECRETARY), (req, res) => {
+router.post("/", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { name } = req.body;
   const { query, params } = queries.createArea({ name });
 
@@ -55,7 +55,7 @@ router.post("/", verifyRole(roles.GENERAL_SECRETARY), (req, res) => {
   });
 });
 
-router.put("/:id", verifyRole(roles.GENERAL_SECRETARY), (req, res) => {
+router.put("/:id", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
   const { query, params } = queries.updateArea({ id, name });
@@ -69,7 +69,7 @@ router.put("/:id", verifyRole(roles.GENERAL_SECRETARY), (req, res) => {
   });
 });
 
-router.delete("/:id", verifyRole(roles.GENERAL_SECRETARY), (req, res) => {
+router.delete("/:id", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { id } = req.params;
   const { query, params } = queries.deleteArea({ id });
   connection.query(query, params, (error) => {
@@ -83,7 +83,7 @@ router.delete("/:id", verifyRole(roles.GENERAL_SECRETARY), (req, res) => {
 
 router.post(
   "/:id/chairperson/:chairpersonId",
-  verifyRole(roles.GENERAL_SECRETARY),
+  verifyRole([roles.GENERAL_SECRETARY]),
   (req, res) => {
     const { id: areaId, chairpersonId } = req.params;
 
@@ -104,5 +104,43 @@ router.post(
     });
   }
 );
+
+router.delete(
+  "/:id/chairperson/:chairpersonId",
+  verifyRole([roles.GENERAL_SECRETARY]),
+  (req, res) => {
+    const { id: areaId, chairpersonId } = req.params;
+    const { query, params } = queries.unassignAreaToChairperson({
+      areaId,
+      chairpersonId,
+    });
+    connection.query(query, params, (error, results) => {
+      if (error) {
+        console.log(error);
+        return res
+          .status(400)
+          .json({ message: "Couldn't unassign area", error });
+      }
+      const { changedRows } = results[1];
+      if (changedRows === 0) {
+        return res.status(304).json({ message: "No matching record found" });
+      }
+      return res.status(200).json({ message: "Area unassigned successully" });
+    });
+  }
+);
+
+router.get("/with/chairperson", (req, res) => {
+  const limit = 20;
+  const offset = +req.query.offset || 0;
+  const { query, params } = queries.getAreasWithChairperson({ limit, offset });
+  connection.query(query, params, (error, data) => {
+    if (error) {
+      console.log(error);
+      return res.status(400).json({ message: "Error fetching data", error });
+    }
+    return res.status(200).json({ data });
+  });
+});
 
 export default router;

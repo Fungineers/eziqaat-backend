@@ -111,3 +111,26 @@ export const assignAreaToChairperson = ({ areaId, chairpersonId }) => {
   const params = [areaId, chairpersonId];
   return { query, params };
 };
+
+export const unassignAreaToChairperson = ({ areaId, chairpersonId }) => {
+  const query = `
+    SET @removedAt := UTC_TIMESTAMP();
+    UPDATE areachairperson 
+      SET removedAt = @removedAt
+      WHERE areaId = ?
+      AND chairpersonId = ?
+      AND removedAt is NULL;
+    `;
+  const params = [areaId, chairpersonId];
+  return { query, params };
+};
+
+export const getAreasWithChairperson = ({ limit, offset }) => {
+  const query = `
+    SELECT * FROM areawithchairperson
+      ORDER BY areaName ASC
+      LIMIT ? OFFSET ?
+  `;
+  const params = [limit, offset];
+  return { query, params };
+};

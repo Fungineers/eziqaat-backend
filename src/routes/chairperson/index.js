@@ -6,7 +6,7 @@ import { verifyRole } from "@/middleware";
 
 const router = Router();
 
-router.post("/", verifyRole(roles.GENERAL_SECRETARY), (req, res) => {
+router.post("/", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { firstName, lastName, email, cnic, phone } = req.body;
 
   const password = generateRandomString(8);
