@@ -1,17 +1,7 @@
-/**
- * @param {string} requiredRole
- * @returns {import("express").RequestHandler}
- */
-const verifyRole = (requiredRole) => (req, res, next) => {
+const verifyRole = (requiredRoles) => (req, res, next) => {
   if (req.user) {
-    console.log(req.user);
-    const { role, active } = req.user;
-    if (!active) {
-      return res.status(401).json({
-        error: "Couldn't process request",
-        message: "Please confirm your email first",
-      });
-    } else if (role !== requiredRole) {
+    const { role } = req.user;
+    if (!requiredRoles.includes(role)) {
       return res.status(401).json({
         error: "Couldn't process request",
         message: "Access Denied",

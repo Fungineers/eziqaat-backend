@@ -6,8 +6,8 @@ import { getUserFromToken } from "@/middleware";
 import {
   chairpersonRouter,
   authRouter,
-  generalSecretaryRouter,
   areaRouter,
+  workerRouter,
 } from "@/routes";
 
 config();
@@ -23,9 +23,9 @@ const port = process.env.port || 3001;
 app.all("*", getUserFromToken);
 
 app.use("/auth", authRouter);
-app.use("/general-secretary", generalSecretaryRouter);
-app.use("/chairperson", chairpersonRouter);
 app.use("/area", areaRouter);
+app.use("/chairperson", chairpersonRouter);
+app.use("/worker", workerRouter);
 
 app.listen(port, () => {
   console.log(`⚡ Server is listening on port ${port}`);

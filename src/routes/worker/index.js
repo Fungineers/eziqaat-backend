@@ -1,14 +1,12 @@
-import { Router } from "express";
-import { connection, queries } from "@/database";
-import { roles } from "@/constants";
-import { generateRandomString } from "@/utils";
-import { verifyRole } from "@/middleware";
+const { roles } = require("@/constants");
+const { queries, connection } = require("@/database");
+const { verifyRole } = require("@/middleware");
+const { generateRandomString } = require("@/utils");
+const { Router } = require("express");
 
 const router = Router();
 
-router.all("*", verifyRole(roles.CHAIRPERSON));
-
-router.post("/worker", (req, res) => {
+router.post("/", verifyRole(roles.CHAIRPERSON), (req, res) => {
   const { firstName, lastName, email, cnic, phone } = req.body;
 
   const password = generateRandomString(8);

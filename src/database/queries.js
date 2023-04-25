@@ -10,9 +10,8 @@ export const createUser = ({
   const query = `
     SET @id := REPLACE(UUID(), "-", "");
     SET @createdAt := UTC_TIMESTAMP();
-    SET @active := FALSE;
-    INSERT INTO user (id, firstName, lastName, email, role, phone, cnic, password, active, createdAt)
-      VALUES (@id, ?, ?, ?, ?, ?, ?, ?, @active, @createdAt);
+    INSERT INTO user (id, firstName, lastName, email, role, phone, cnic, password, createdAt)
+      VALUES (@id, ?, ?, ?, ?, ?, ?, ?, @createdAt);
     SELECT * FROM userdata
       WHERE id = @id;
   `;
@@ -20,17 +19,17 @@ export const createUser = ({
   return { query, params };
 };
 
-export const authenticateUser = ({ email, password }) => {
+export const authenticateUser = ({ credential, password, field }) => {
   const query = `
     SELECT 
-      id, firstName, lastName, email, role, phone, cnic, active
+      id, firstName, lastName, email, role, phone, cnic
       FROM user
       WHERE 
-        email = ?
+        ${field} = ?
       AND
         password = SHA1(UNHEX(SHA1(?)));
   `;
-  const params = [email, password];
+  const params = [credential, password];
   return { query, params };
 };
 
@@ -96,5 +95,54 @@ export const getAreaById = ({ id }) => {
       WHERE id = ?;
   `;
   const params = [id];
+  return { query, params };
+};
+
+export const assignAreaToChairperson = ({ areaId, chairpersonId }) => {
+  const query = `
+    SET @id := REPLACE(UUID(), "-", "");
+    SET @createdAt := UTC_TIMESTAMP();
+    INSERT INTO areachairperson (id, areaId, chairpersonId, createdAt)
+      VALUES(@id, ?, ?, @createdAt);
+    SELECT * FROM areawithchairperson
+      WHERE id = @id;
+  `;
+  const params = [areaId, chairpersonId];
+  return { query, params };
+};
+
+export const unassignAreaToChairperson = ({ areaId, chairpersonId }) => {
+  const query = `
+    SET @removedAt := UTC_TIMESTAMP();
+    UPDATE areachairperson 
+      SET removedAt = @removedAt
+      WHERE areaId = ?
+      AND chairpersonId = ?
+      AND removedAt is NULL;
+    `;
+  const params = [areaId, chairpersonId];
+  return { query, params };
+};
+
+export const getUnassignedAreas = ({ limit, offset }) => {
+  const query = `
+    SELECT a.* FROM areachairperson AS ac 
+      INNER JOIN area AS a 
+      ON a.id = ac.areaId 
+      WHERE removedAt is NULL
+      LIMIT ? OFFSET ?
+  `;
+  const params = [limit, offset];
+  return { query, params };
+};
+
+export const getAreasWithChairperson = ({ limit, offset }) => {
+  const query = `
+    SELECT * FROM areawithchairperson
+      WHERE removedAt IS NULL
+      ORDER BY areaName ASC
+      LIMIT ? OFFSET ?
+  `;
+  const params = [limit, offset];
   return { query, params };
 };
