@@ -10,9 +10,8 @@ export const createUser = ({
   const query = `
     SET @id := REPLACE(UUID(), "-", "");
     SET @createdAt := UTC_TIMESTAMP();
-    SET @active := FALSE;
-    INSERT INTO user (id, firstName, lastName, email, role, phone, cnic, password, active, createdAt)
-      VALUES (@id, ?, ?, ?, ?, ?, ?, ?, @active, @createdAt);
+    INSERT INTO user (id, firstName, lastName, email, role, phone, cnic, password, createdAt)
+      VALUES (@id, ?, ?, ?, ?, ?, ?, ?, @createdAt);
     SELECT * FROM userdata
       WHERE id = @id;
   `;
@@ -20,17 +19,17 @@ export const createUser = ({
   return { query, params };
 };
 
-export const authenticateUser = ({ email, password }) => {
+export const authenticateUser = ({ credential, password, field }) => {
   const query = `
     SELECT 
-      id, firstName, lastName, email, role, phone, cnic, active
+      id, firstName, lastName, email, role, phone, cnic
       FROM user
       WHERE 
-        email = ?
+        ${field} = ?
       AND
         password = SHA1(UNHEX(SHA1(?)));
   `;
-  const params = [email, password];
+  const params = [credential, password];
   return { query, params };
 };
 
