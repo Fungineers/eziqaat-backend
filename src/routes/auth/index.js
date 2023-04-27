@@ -29,7 +29,6 @@ router.post("/signin", (req, res) => {
       console.log(error);
       return res.status(401).json({ message: "Couldn't sign in", error });
     }
-    console.log(results);
     const user = results[0];
     if (!user) {
       return res.status(401).json({

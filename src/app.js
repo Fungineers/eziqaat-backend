@@ -1,14 +1,9 @@
-import cors from "cors";
 import { config } from "dotenv";
-import express, { json, urlencoded } from "express";
 import { connectDb } from "@/database";
 import { getUserFromToken } from "@/middleware";
-import {
-  chairpersonRouter,
-  authRouter,
-  areaRouter,
-  workerRouter,
-} from "@/routes";
+import * as routes from "@/routes";
+import cors from "cors";
+import express, { json, urlencoded } from "express";
 
 config();
 
@@ -18,14 +13,14 @@ app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: false }));
 
-const port = process.env.port || 3001;
-
 app.all("*", getUserFromToken);
 
-app.use("/auth", authRouter);
-app.use("/area", areaRouter);
-app.use("/chairperson", chairpersonRouter);
-app.use("/worker", workerRouter);
+app.use("/auth", routes.authRouter);
+app.use("/area", routes.areaRouter);
+app.use("/chairperson", routes.chairpersonRouter);
+app.use("/worker", routes.workerRouter);
+
+const port = process.env.port || 3001;
 
 app.listen(port, () => {
   console.log(`⚡ Server is listening on port ${port}`);

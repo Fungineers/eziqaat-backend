@@ -11,7 +11,7 @@ export const createUser = ({
     SET @id := REPLACE(UUID(), "-", "");
     SET @createdAt := UTC_TIMESTAMP();
     INSERT INTO user (id, firstName, lastName, email, role, phone, cnic, password, createdAt)
-      VALUES (@id, ?, ?, ?, ?, ?, ?, ?, @createdAt);
+      VALUES (@id, ?, ?, ?, ?, ?, ?, SHA1(UNHEX(SHA1(?))), @createdAt);
     SELECT * FROM userdata
       WHERE id = @id;
   `;

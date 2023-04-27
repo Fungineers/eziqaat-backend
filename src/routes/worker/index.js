@@ -1,12 +1,12 @@
-const { roles } = require("@/constants");
-const { queries, connection } = require("@/database");
-const { verifyRole } = require("@/middleware");
-const { generateRandomString } = require("@/utils");
-const { Router } = require("express");
+import { roles } from "@/constants";
+import { connection, queries } from "@/database";
+import { verifyRole } from "@/middleware";
+import { generateRandomString } from "@/utils";
+import { Router } from "express";
 
 const router = Router();
 
-router.post("/", verifyRole(roles.CHAIRPERSON), (req, res) => {
+router.post("/", verifyRole([roles.CHAIRPERSON]), (req, res) => {
   const { firstName, lastName, email, cnic, phone } = req.body;
 
   const password = generateRandomString(8);
@@ -29,7 +29,7 @@ router.post("/", verifyRole(roles.CHAIRPERSON), (req, res) => {
       console.log(error);
       return res.status(400).json({ message: "Couldn't create worker", error });
     }
-    const user = results[4][0];
+    const user = results[3][0];
     return res.status(200).json({ user });
   });
 });

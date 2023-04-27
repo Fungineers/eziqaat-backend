@@ -35,7 +35,8 @@ router.post(
           .status(400)
           .json({ message: "Couldn't create chairperson", error });
       }
-      const user = results[4][0];
+
+      const user = results[3][0];
       return res.status(200).json({ user });
     });
   }
