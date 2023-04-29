@@ -146,3 +146,28 @@ export const getAreasWithChairperson = ({ limit, offset }) => {
   const params = [limit, offset];
   return { query, params };
 };
+
+export const addPendingDonation = ({
+  amount,
+  address,
+  donorId,
+  chairpersonId,
+}) => {
+  const query = `
+    SET @id = REPLACE(UUID(), "-", "");
+    SET @createdAt = UTC_TIMESTAMP();
+    SELECT areaId 
+      FROM areachairperson 
+      WHERE chairpersonId = ? 
+      LIMIT 1 
+      INTO @areaId;
+    INSERT 
+      INTO donation (id, amount, address, status, areaId, donorId, createdAt)
+      VALUES (@id, ?, ?, "pending", @areaId, ?,  @createdAt);
+    SELECT * 
+      FROM donation
+      WHERE id = @id;
+  `;
+  const params = [chairpersonId, amount, address, donorId];
+  return { query, params };
+};

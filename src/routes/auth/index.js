@@ -5,6 +5,9 @@ import { regexps } from "@/constants";
 
 const router = Router();
 
+/**
+ * Signin providing credential (email/cnic/phone) and password
+ */
 router.post("/signin", (req, res) => {
   const { credential, password } = req.body;
   const field = regexps.email.test(credential)

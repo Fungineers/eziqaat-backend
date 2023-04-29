@@ -18,6 +18,7 @@ app.all("*", getUserFromToken);
 app.use("/auth", routes.authRouter);
 app.use("/area", routes.areaRouter);
 app.use("/chairperson", routes.chairpersonRouter);
+app.use("/user", routes.userRouter);
 app.use("/worker", routes.workerRouter);
 
 const port = process.env.port || 3001;
