@@ -251,3 +251,42 @@ export const addPendingDonation = ({
   const params = [chairpersonId, amount, address, donorId];
   return { sql, params };
 };
+
+export const requestDonation = ({ areaId, amount, address, donorId }) => {
+  const sql = `
+    SET @id = REPLACE(UUID(), "-", "");
+    SET @createdAt = UTC_TIMESTAMP();
+    INSERT 
+      INTO donation (id, amount, address, status, areaId, donorId, createdAt)
+      VALUES (@id, ?, ?, "REQUESTED", ?, ?,  @createdAt);
+    SELECT * 
+      FROM donation
+      WHERE id = @id;
+  `;
+  const params = [amount, address, areaId, donorId];
+  return { sql, params };
+};
+
+export const approveDonation = ({ donationId, chairpersonId }) => {
+  const sql = `
+    SELECT areaId
+      FROM donation
+      WHERE id = ?
+      AND status = "REQUESTED"
+      LIMIT 1
+      INTO @areaId;
+    SELECT TRUE
+      FROM areachairperson
+      WHERE areaId = @areaId
+      AND chairpersonId = ?
+      AND removedAt IS NULL
+      LIMIT 1
+      INTO @isAdmin;
+    UPDATE donation
+      SET status = "PENDING"
+      WHERE id = ?
+      AND @isAdmin = TRUE;
+  `;
+  const params = [donationId, chairpersonId, donationId];
+  return { sql, params };
+};
