@@ -5,6 +5,9 @@ import { Router } from "express";
 
 const router = Router();
 
+/**
+ * Chairperson adds a pending donation
+ */
 router.post("/pending", verifyRole([roles.CHAIRPERSON]), (req, res) => {
   const { amount, address, donorId } = req.body;
   const chairpersonId = req.user.id;

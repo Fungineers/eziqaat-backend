@@ -19,6 +19,48 @@ export const createUser = ({
   return { query, params };
 };
 
+export const createWorker = ({
+  firstName,
+  lastName,
+  email,
+  role,
+  phone,
+  cnic,
+  password,
+  chairpersonId,
+}) => {
+  const query = `
+    START TRANSACTION;
+    SELECT areaId 
+      FROM areachairperson
+      WHERE chairpersonId = ?
+      AND removedAt IS NULL
+      LIMIT 1
+      INTO @areaId;
+    SET @id := REPLACE(UUID(), "-", "");
+    SET @createdAt := UTC_TIMESTAMP();
+    INSERT INTO user (id, firstName, lastName, email, role, phone, cnic, password, createdAt)
+      VALUES (@id, ?, ?, ?, ?, ?, ?, SHA1(UNHEX(SHA1(?))), @createdAt);
+    SET @areaworkerId := REPLACE(UUID(), "-", "");
+    SET @createdAt := UTC_TIMESTAMP();
+    INSERT INTO areaworker (id, areaId, workerId, createdAt)
+      VALUES(@areaworkerId, @areaId, @id, @createdAt);
+    SELECT * FROM userdata
+      WHERE id = @id;
+  `;
+  const params = [
+    chairpersonId,
+    firstName,
+    lastName,
+    email,
+    role,
+    phone,
+    cnic,
+    password,
+  ];
+  return { query, params };
+};
+
 export const updatePassword = ({ id, password }) => {
   const query = `
     UPDATE user
@@ -164,6 +206,24 @@ export const getAreasWithChairperson = ({ limit, offset }) => {
       LIMIT ? OFFSET ?
   `;
   const params = [limit, offset];
+  return { query, params };
+};
+
+export const getWorkersByChairperson = ({ chairpersonId }) => {
+  const query = `
+  SELECT areaId 
+    FROM areachairperson 
+    WHERE chairpersonId = ? 
+    AND removedAt IS NULL 
+    LIMIT 1 
+    INTO @areaId;
+  SELECT w.*
+    FROM userdata AS w
+    INNER JOIN areaworker AS aw
+    ON aw.workerId = w.id
+    WHERE aw.areaId = @areaId;
+  `;
+  const params = [chairpersonId];
   return { query, params };
 };
 

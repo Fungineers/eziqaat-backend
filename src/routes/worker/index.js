@@ -1,36 +1,68 @@
 import { roles } from "@/constants";
 import { connection, queries } from "@/database";
-import { verifyRole } from "@/middleware";
+import { validateSignup, verifyRole } from "@/middleware";
 import { generateRandomString } from "@/utils";
 import { Router } from "express";
 
 const router = Router();
 
-router.post("/", verifyRole([roles.CHAIRPERSON]), (req, res) => {
-  const { firstName, lastName, email, cnic, phone } = req.body;
+/**
+ * Create worker
+ */
+router.post(
+  "/",
+  verifyRole([roles.CHAIRPERSON]),
+  validateSignup,
+  (req, res) => {
+    const chairpersonId = req.user.id;
+    const role = "WORKER";
+    const { firstName, lastName, email, cnic, phone } = req.body;
 
-  const password = generateRandomString(8);
-  const role = roles.WORKER;
+    const password = generateRandomString(8);
 
-  console.log(password);
+    console.log(password);
 
-  const { query, params } = queries.createUser({
-    firstName,
-    lastName,
-    email,
-    role,
-    phone,
-    cnic,
-    password,
-  });
+    const { query, params } = queries.createWorker({
+      firstName,
+      lastName,
+      email,
+      role,
+      phone,
+      cnic,
+      password,
+      chairpersonId,
+    });
 
+    connection.query(query, params, (error, results) => {
+      if (error) {
+        console.log(error);
+        connection.query("ROLLBACK");
+        return res
+          .status(400)
+          .json({ message: "Couldn't create worker", error });
+      }
+
+      const user = results[8][0];
+      return res.status(200).json({ user });
+    });
+  }
+);
+
+/**
+ * Get workers from the area the current signed in chairperson is assigned to
+ */
+router.get("/", verifyRole([roles.CHAIRPERSON]), (req, res) => {
+  const { id: chairpersonId } = req.user;
+  const { query, params } = queries.getWorkersByChairperson({ chairpersonId });
   connection.query(query, params, (error, results) => {
     if (error) {
-      console.log(error);
-      return res.status(400).json({ message: "Couldn't create worker", error });
+      return res.status(400).json({
+        message: "Something went wrong",
+        error,
+      });
     }
-    const user = results[3][0];
-    return res.status(200).json({ user });
+    const workers = results[1];
+    return res.status(200).json({ workers });
   });
 });
 
