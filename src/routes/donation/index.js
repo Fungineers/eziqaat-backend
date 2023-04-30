@@ -30,6 +30,9 @@ router.post("/requested", verifyRole([roles.DONOR]), (req, res) => {
   });
 });
 
+/**
+ * Approve a donation requested by donor
+ */
 router.patch("/:id/approve", verifyRole([roles.CHAIRPERSON]), (req, res) => {
   const { id: chairpersonId } = req.user;
   const { id: donationId } = req.params;
@@ -66,18 +69,20 @@ router.patch("/:id/approve", verifyRole([roles.CHAIRPERSON]), (req, res) => {
  * Chairperson adds a pending donation
  */
 router.post("/pending", verifyRole([roles.CHAIRPERSON]), (req, res) => {
-  const { amount, address, donorId } = req.body;
-  const chairpersonId = req.user.id;
+  const { id: chairpersonId } = req.user;
+  const { amount, address, referenceName, referencePhone } = req.body;
   const { sql, params } = queries.addPendingDonation({
     amount,
     address,
-    donorId,
+    referenceName,
+    referencePhone,
     chairpersonId,
   });
   connection.query(sql, params, (error, results) => {
     if (error) {
+      console.log(error);
       return res.status(400).json({
-        message: "Couldn't add donation",
+        message: "Couldn't create pending donation",
         error,
       });
     }

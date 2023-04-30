@@ -230,7 +230,8 @@ export const getWorkersByChairperson = ({ chairpersonId }) => {
 export const addPendingDonation = ({
   amount,
   address,
-  donorId,
+  referenceName,
+  referencePhone,
   chairpersonId,
 }) => {
   const sql = `
@@ -239,16 +240,23 @@ export const addPendingDonation = ({
     SELECT areaId 
       FROM areachairperson 
       WHERE chairpersonId = ? 
+      AND removedAt IS NULL
       LIMIT 1 
       INTO @areaId;
     INSERT 
-      INTO donation (id, amount, address, status, areaId, donorId, createdAt)
-      VALUES (@id, ?, ?, "pending", @areaId, ?,  @createdAt);
+      INTO donation (id, amount, address, status, referenceName, referencePhone, areaId, createdAt, approvedAt)
+      VALUES (@id, ?, ?, "PENDING", ?, ?, @areaId, @createdAt, @createdAt);
     SELECT * 
       FROM donation
       WHERE id = @id;
   `;
-  const params = [chairpersonId, amount, address, donorId];
+  const params = [
+    chairpersonId,
+    amount,
+    referenceName,
+    referencePhone,
+    address,
+  ];
   return { sql, params };
 };
 
@@ -283,7 +291,8 @@ export const approveDonation = ({ donationId, chairpersonId }) => {
       LIMIT 1
       INTO @isAdmin;
     UPDATE donation
-      SET status = "PENDING"
+      SET status = "PENDING", 
+        approvedAt = UTC_TIMESTAMP()
       WHERE id = ?
       AND @isAdmin = TRUE;
   `;
