@@ -4,7 +4,6 @@ import * as queries from "./queries";
 
 config();
 
-// mysql://${user}:${password}@${host}:${port}/${database}
 const host = process.env.MYSQL_HOST;
 const port = process.env.MYSQL_PORT;
 const user = process.env.MYSQL_USER;

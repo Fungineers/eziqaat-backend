@@ -2,18 +2,16 @@ import { Router } from "express";
 import { connection, queries } from "@/database";
 import { sign } from "jsonwebtoken";
 import { regexps } from "@/constants";
+import { getCredentialField } from "@/utils";
 
 const router = Router();
 
+/**
+ * Signin providing credential (email/cnic/phone) and password
+ */
 router.post("/signin", (req, res) => {
   const { credential, password } = req.body;
-  const field = regexps.email.test(credential)
-    ? "email"
-    : regexps.cnic.test(credential)
-    ? "cnic"
-    : regexps.phone.test(credential)
-    ? "phone"
-    : null;
+  const field = getCredentialField(credential);
   if (!field) {
     return res.status(400).json({
       message: "Invalid credential",
@@ -29,7 +27,6 @@ router.post("/signin", (req, res) => {
       console.log(error);
       return res.status(401).json({ message: "Couldn't sign in", error });
     }
-    console.log(results);
     const user = results[0];
     if (!user) {
       return res.status(401).json({

@@ -11,11 +11,31 @@ export const createUser = ({
     SET @id := REPLACE(UUID(), "-", "");
     SET @createdAt := UTC_TIMESTAMP();
     INSERT INTO user (id, firstName, lastName, email, role, phone, cnic, password, createdAt)
-      VALUES (@id, ?, ?, ?, ?, ?, ?, ?, @createdAt);
+      VALUES (@id, ?, ?, ?, ?, ?, ?, SHA1(UNHEX(SHA1(?))), @createdAt);
     SELECT * FROM userdata
       WHERE id = @id;
   `;
   const params = [firstName, lastName, email, role, phone, cnic, password];
+  return { query, params };
+};
+
+export const updatePassword = ({ id, password }) => {
+  const query = `
+    UPDATE user
+      SET password = SHA1(UNHEX(SHA1(?)))
+      WHERE id = ?;
+  `;
+  const params = [password, id];
+  return { query, params };
+};
+
+export const resetPassword = ({ credential, password, field }) => {
+  const query = `
+    UPDATE user
+      SET password = SHA1(UNHEX(SHA1(?)))
+      WHERE ${field} = ?;
+  `;
+  const params = [password, credential];
   return { query, params };
 };
 
@@ -144,5 +164,30 @@ export const getAreasWithChairperson = ({ limit, offset }) => {
       LIMIT ? OFFSET ?
   `;
   const params = [limit, offset];
+  return { query, params };
+};
+
+export const addPendingDonation = ({
+  amount,
+  address,
+  donorId,
+  chairpersonId,
+}) => {
+  const query = `
+    SET @id = REPLACE(UUID(), "-", "");
+    SET @createdAt = UTC_TIMESTAMP();
+    SELECT areaId 
+      FROM areachairperson 
+      WHERE chairpersonId = ? 
+      LIMIT 1 
+      INTO @areaId;
+    INSERT 
+      INTO donation (id, amount, address, status, areaId, donorId, createdAt)
+      VALUES (@id, ?, ?, "pending", @areaId, ?,  @createdAt);
+    SELECT * 
+      FROM donation
+      WHERE id = @id;
+  `;
+  const params = [chairpersonId, amount, address, donorId];
   return { query, params };
 };

@@ -5,6 +5,9 @@ import { Router } from "express";
 
 const router = Router();
 
+/**
+ * Get all areas
+ */
 router.get("/", (req, res) => {
   const limit = 20;
   const offset = +req.query.offset || 0;
@@ -20,6 +23,9 @@ router.get("/", (req, res) => {
   });
 });
 
+/**
+ * Get all areas with chairperson info (if assigned)
+ */
 router.get("/with-chairperson", (req, res) => {
   const limit = 20;
   const offset = +req.query.offset || 0;
@@ -33,6 +39,9 @@ router.get("/with-chairperson", (req, res) => {
   });
 });
 
+/**
+ * Get all areas that are not assigned to any chairperson
+ */
 router.get("/unassigned", (req, res) => {
   const limit = 20;
   const offset = +req.query.offset || 0;
@@ -49,6 +58,9 @@ router.get("/unassigned", (req, res) => {
   });
 });
 
+/**
+ * Get a specific area by id
+ */
 router.get("/:id", (req, res) => {
   const { id } = req.params;
 
@@ -67,6 +79,9 @@ router.get("/:id", (req, res) => {
   });
 });
 
+/**
+ * Create a new area, provide name
+ */
 router.post("/", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { name } = req.body;
   const { query, params } = queries.createArea({ name });
@@ -84,6 +99,9 @@ router.post("/", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   });
 });
 
+/**
+ * Update an area by id, set new name
+ */
 router.put("/:id", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
@@ -98,6 +116,9 @@ router.put("/:id", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   });
 });
 
+/**
+ * Delete an area
+ */
 router.delete("/:id", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { id } = req.params;
   const { query, params } = queries.deleteArea({ id });
@@ -110,6 +131,9 @@ router.delete("/:id", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   });
 });
 
+/**
+ * Assign an area by id, to a chairperson given his/her id
+ */
 router.post(
   "/:id/chairperson/:chairpersonId",
   verifyRole([roles.GENERAL_SECRETARY]),
@@ -134,6 +158,9 @@ router.post(
   }
 );
 
+/**
+ * Unassign an area by id, from a chairperson given his/her id
+ */
 router.delete(
   "/:id/chairperson/:chairpersonId",
   verifyRole([roles.GENERAL_SECRETARY]),
