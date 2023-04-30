@@ -11,13 +11,13 @@ const router = Router();
 router.post("/pending", verifyRole([roles.CHAIRPERSON]), (req, res) => {
   const { amount, address, donorId } = req.body;
   const chairpersonId = req.user.id;
-  const { query, params } = queries.addPendingDonation({
+  const { sql, params } = queries.addPendingDonation({
     amount,
     address,
     donorId,
     chairpersonId,
   });
-  connection.query(query, params, (error, results) => {
+  connection.query(sql, params, (error, results) => {
     if (error) {
       return res.status(400).json({
         message: "Couldn't add donation",

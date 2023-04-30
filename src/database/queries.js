@@ -7,7 +7,7 @@ export const createUser = ({
   cnic,
   password,
 }) => {
-  const query = `
+  const sql = `
     SET @id := REPLACE(UUID(), "-", "");
     SET @createdAt := UTC_TIMESTAMP();
     INSERT INTO user (id, firstName, lastName, email, role, phone, cnic, password, createdAt)
@@ -16,7 +16,7 @@ export const createUser = ({
       WHERE id = @id;
   `;
   const params = [firstName, lastName, email, role, phone, cnic, password];
-  return { query, params };
+  return { sql, params };
 };
 
 export const createWorker = ({
@@ -29,7 +29,7 @@ export const createWorker = ({
   password,
   chairpersonId,
 }) => {
-  const query = `
+  const sql = `
     START TRANSACTION;
     SELECT areaId 
       FROM areachairperson
@@ -58,31 +58,31 @@ export const createWorker = ({
     cnic,
     password,
   ];
-  return { query, params };
+  return { sql, params };
 };
 
 export const updatePassword = ({ id, password }) => {
-  const query = `
+  const sql = `
     UPDATE user
       SET password = SHA1(UNHEX(SHA1(?)))
       WHERE id = ?;
   `;
   const params = [password, id];
-  return { query, params };
+  return { sql, params };
 };
 
 export const resetPassword = ({ credential, password, field }) => {
-  const query = `
+  const sql = `
     UPDATE user
       SET password = SHA1(UNHEX(SHA1(?)))
       WHERE ${field} = ?;
   `;
   const params = [password, credential];
-  return { query, params };
+  return { sql, params };
 };
 
 export const authenticateUser = ({ credential, password, field }) => {
-  const query = `
+  const sql = `
     SELECT 
       id, firstName, lastName, email, role, phone, cnic
       FROM user
@@ -92,21 +92,21 @@ export const authenticateUser = ({ credential, password, field }) => {
         password = SHA1(UNHEX(SHA1(?)));
   `;
   const params = [credential, password];
-  return { query, params };
+  return { sql, params };
 };
 
 export const getUserById = ({ id }) => {
-  const query = `
+  const sql = `
     SELECT * 
       FROM userdata 
       WHERE id = ?
   `;
   const params = [id];
-  return { query, params };
+  return { sql, params };
 };
 
 export const createArea = ({ name }) => {
-  const query = `
+  const sql = `
     SET @id := REPLACE(UUID(), "-", "");
     SET @createdAt := UTC_TIMESTAMP();
     INSERT INTO area(id, name, createdAt)
@@ -117,11 +117,11 @@ export const createArea = ({ name }) => {
       @createdAt AS createdAt;
   `;
   const params = [name, name];
-  return { query, params };
+  return { sql, params };
 };
 
 export const updateArea = ({ id, name }) => {
-  const query = `
+  const sql = `
     UPDATE area 
       SET name = ? 
       WHERE id = ?; 
@@ -129,39 +129,39 @@ export const updateArea = ({ id, name }) => {
       FROM area 
       WHERE id = ?;`;
   const params = [name, id, id];
-  return { query, params };
+  return { sql, params };
 };
 
 export const deleteArea = ({ id }) => {
-  const query = `
+  const sql = `
     DELETE FROM area
       WHERE id = ?
   `;
   const params = [id];
-  return { query, params };
+  return { sql, params };
 };
 
 export const getAreas = ({ limit, offset }) => {
-  const query = `
+  const sql = `
     SELECT * FROM area
       ORDER BY name ASC
       LIMIT ? OFFSET ?;
   `;
   const params = [limit, offset];
-  return { query, params };
+  return { sql, params };
 };
 
 export const getAreaById = ({ id }) => {
-  const query = `
+  const sql = `
     SELECT * FROM area
       WHERE id = ?;
   `;
   const params = [id];
-  return { query, params };
+  return { sql, params };
 };
 
 export const assignAreaToChairperson = ({ areaId, chairpersonId }) => {
-  const query = `
+  const sql = `
     SET @id := REPLACE(UUID(), "-", "");
     SET @createdAt := UTC_TIMESTAMP();
     INSERT INTO areachairperson (id, areaId, chairpersonId, createdAt)
@@ -170,11 +170,11 @@ export const assignAreaToChairperson = ({ areaId, chairpersonId }) => {
       WHERE id = @id;
   `;
   const params = [areaId, chairpersonId];
-  return { query, params };
+  return { sql, params };
 };
 
 export const unassignAreaToChairperson = ({ areaId, chairpersonId }) => {
-  const query = `
+  const sql = `
     SET @removedAt := UTC_TIMESTAMP();
     UPDATE areachairperson 
       SET removedAt = @removedAt
@@ -183,11 +183,11 @@ export const unassignAreaToChairperson = ({ areaId, chairpersonId }) => {
       AND removedAt is NULL;
     `;
   const params = [areaId, chairpersonId];
-  return { query, params };
+  return { sql, params };
 };
 
 export const getUnassignedAreas = ({ limit, offset }) => {
-  const query = `
+  const sql = `
     SELECT a.* FROM areachairperson AS ac 
       INNER JOIN area AS a 
       ON a.id = ac.areaId 
@@ -195,22 +195,22 @@ export const getUnassignedAreas = ({ limit, offset }) => {
       LIMIT ? OFFSET ?
   `;
   const params = [limit, offset];
-  return { query, params };
+  return { sql, params };
 };
 
 export const getAreasWithChairperson = ({ limit, offset }) => {
-  const query = `
+  const sql = `
     SELECT * FROM areawithchairperson
       WHERE removedAt IS NULL
       ORDER BY areaName ASC
       LIMIT ? OFFSET ?
   `;
   const params = [limit, offset];
-  return { query, params };
+  return { sql, params };
 };
 
 export const getWorkersByChairperson = ({ chairpersonId }) => {
-  const query = `
+  const sql = `
   SELECT areaId 
     FROM areachairperson 
     WHERE chairpersonId = ? 
@@ -224,7 +224,7 @@ export const getWorkersByChairperson = ({ chairpersonId }) => {
     WHERE aw.areaId = @areaId;
   `;
   const params = [chairpersonId];
-  return { query, params };
+  return { sql, params };
 };
 
 export const addPendingDonation = ({
@@ -233,7 +233,7 @@ export const addPendingDonation = ({
   donorId,
   chairpersonId,
 }) => {
-  const query = `
+  const sql = `
     SET @id = REPLACE(UUID(), "-", "");
     SET @createdAt = UTC_TIMESTAMP();
     SELECT areaId 
@@ -249,5 +249,5 @@ export const addPendingDonation = ({
       WHERE id = @id;
   `;
   const params = [chairpersonId, amount, address, donorId];
-  return { query, params };
+  return { sql, params };
 };

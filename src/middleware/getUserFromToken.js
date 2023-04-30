@@ -13,8 +13,8 @@ const getUserFromToken = (req, res, next) => {
     try {
       const payload = verify(token, process.env.JWT_SECRET);
       const { id } = payload;
-      const { query, params } = queries.getUserById({ id });
-      connection.query(query, params, (error, results) => {
+      const { sql, params } = queries.getUserById({ id });
+      connection.query(sql, params, (error, results) => {
         if (error) {
           console.log(error);
           next();

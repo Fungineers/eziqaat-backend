@@ -17,12 +17,12 @@ router.post("/signin", (req, res) => {
       message: "Invalid credential",
     });
   }
-  const { query, params } = queries.authenticateUser({
+  const { sql, params } = queries.authenticateUser({
     credential,
     password,
     field,
   });
-  connection.query(query, params, (error, results) => {
+  connection.query(sql, params, (error, results) => {
     if (error) {
       console.log(error);
       return res.status(401).json({ message: "Couldn't sign in", error });
