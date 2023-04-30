@@ -1,8 +1,8 @@
-import { config } from "dotenv";
 import { connectDb } from "@/database";
 import { getUserFromToken } from "@/middleware";
 import * as routes from "@/routes";
 import cors from "cors";
+import { config } from "dotenv";
 import express, { json, urlencoded } from "express";
 
 config();
@@ -14,7 +14,6 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 
 app.all("*", getUserFromToken);
-
 app.use("/auth", routes.authRouter);
 app.use("/area", routes.areaRouter);
 app.use("/user", routes.userRouter);

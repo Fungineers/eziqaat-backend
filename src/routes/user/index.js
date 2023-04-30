@@ -32,7 +32,7 @@ router.post(
 
     console.log(password);
 
-    const { query, params } = queries.createUser({
+    const { sql, params } = queries.createUser({
       firstName,
       lastName,
       email,
@@ -42,7 +42,7 @@ router.post(
       password,
     });
 
-    connection.query(query, params, (error, results) => {
+    connection.query(sql, params, (error, results) => {
       if (error) {
         console.log(error);
         return res.status(400).json({ message: "Couldn't create user", error });
@@ -74,8 +74,8 @@ router.put("/password", (req, res) => {
         "Password must be 8-20 characters long, with at least one uppercase, one lowercase, one numeric, and one special character",
     });
   }
-  const { query, params } = queries.updatePassword({ id, password });
-  connection.query(query, params, (error, result) => {
+  const { sql, params } = queries.updatePassword({ id, password });
+  connection.query(sql, params, (error, result) => {
     if (error) {
       return res.status(400).json({
         message: "Password couldn't be changed",
@@ -112,12 +112,12 @@ router.patch("/password", (req, res) => {
     });
   }
   const password = generateRandomString(8);
-  const { query, params } = queries.resetPassword({
+  const { sql, params } = queries.resetPassword({
     credential,
     password,
     field,
   });
-  connection.query(query, params, (error, result) => {
+  connection.query(sql, params, (error, result) => {
     if (error) {
       return res.status(400).json({
         message: "Password couldn't be reset",

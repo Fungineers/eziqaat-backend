@@ -12,9 +12,9 @@ router.get("/", (req, res) => {
   const limit = 20;
   const offset = +req.query.offset || 0;
 
-  const { query, params } = queries.getAreas({ limit, offset });
+  const { sql, params } = queries.getAreas({ limit, offset });
 
-  connection.query(query, params, (error, areas) => {
+  connection.query(sql, params, (error, areas) => {
     if (error) {
       console.log(error);
       return res.status(400).json({ message: "Error fetching areas", error });
@@ -29,8 +29,8 @@ router.get("/", (req, res) => {
 router.get("/with-chairperson", (req, res) => {
   const limit = 20;
   const offset = +req.query.offset || 0;
-  const { query, params } = queries.getAreasWithChairperson({ limit, offset });
-  connection.query(query, params, (error, areasWithChairperson) => {
+  const { sql, params } = queries.getAreasWithChairperson({ limit, offset });
+  connection.query(sql, params, (error, areasWithChairperson) => {
     if (error) {
       console.log(error);
       return res.status(400).json({ message: "Error fetching data", error });
@@ -45,8 +45,8 @@ router.get("/with-chairperson", (req, res) => {
 router.get("/unassigned", (req, res) => {
   const limit = 20;
   const offset = +req.query.offset || 0;
-  const { query, params } = queries.getUnassignedAreas({ limit, offset });
-  connection.query(query, params, (error, unassignedAreas) => {
+  const { sql, params } = queries.getUnassignedAreas({ limit, offset });
+  connection.query(sql, params, (error, unassignedAreas) => {
     if (error) {
       console.log(error);
       return res.status(400).json({
@@ -64,9 +64,9 @@ router.get("/unassigned", (req, res) => {
 router.get("/:id", (req, res) => {
   const { id } = req.params;
 
-  const { query, params } = queries.getAreaById({ id });
+  const { sql, params } = queries.getAreaById({ id });
 
-  connection.query(query, params, (error, results) => {
+  connection.query(sql, params, (error, results) => {
     if (error) {
       console.log(error);
       return res.status(400).json({ message: "Error fetching areas", error });
@@ -84,9 +84,9 @@ router.get("/:id", (req, res) => {
  */
 router.post("/", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { name } = req.body;
-  const { query, params } = queries.createArea({ name });
+  const { sql, params } = queries.createArea({ name });
 
-  connection.query(query, params, (error, results) => {
+  connection.query(sql, params, (error, results) => {
     if (error) {
       console.log(error);
       return res.status(400).json({
@@ -105,8 +105,8 @@ router.post("/", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
 router.put("/:id", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const { query, params } = queries.updateArea({ id, name });
-  connection.query(query, params, (error, results) => {
+  const { sql, params } = queries.updateArea({ id, name });
+  connection.query(sql, params, (error, results) => {
     if (error) {
       console.log(error);
       return res.status(400).json({ message: "Couldn't update area", error });
@@ -121,8 +121,8 @@ router.put("/:id", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
  */
 router.delete("/:id", verifyRole([roles.GENERAL_SECRETARY]), (req, res) => {
   const { id } = req.params;
-  const { query, params } = queries.deleteArea({ id });
-  connection.query(query, params, (error) => {
+  const { sql, params } = queries.deleteArea({ id });
+  connection.query(sql, params, (error) => {
     if (error) {
       console.log(error);
       return res.status(400).json({ message: "Couldn't delete area", error });
@@ -140,12 +140,12 @@ router.post(
   (req, res) => {
     const { id: areaId, chairpersonId } = req.params;
 
-    const { query, params } = queries.assignAreaToChairperson({
+    const { sql, params } = queries.assignAreaToChairperson({
       areaId,
       chairpersonId,
     });
 
-    connection.query(query, params, (error, results) => {
+    connection.query(sql, params, (error, results) => {
       if (error) {
         console.log(error);
         return res
@@ -166,11 +166,11 @@ router.delete(
   verifyRole([roles.GENERAL_SECRETARY]),
   (req, res) => {
     const { id: areaId, chairpersonId } = req.params;
-    const { query, params } = queries.unassignAreaToChairperson({
+    const { sql, params } = queries.unassignAreaToChairperson({
       areaId,
       chairpersonId,
     });
-    connection.query(query, params, (error, results) => {
+    connection.query(sql, params, (error, results) => {
       if (error) {
         console.log(error);
         return res

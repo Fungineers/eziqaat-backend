@@ -15,14 +15,14 @@ router.post(
   validateSignup,
   (req, res) => {
     const chairpersonId = req.user.id;
-    const role = "WORKER";
+    const role = roles.WORKER;
     const { firstName, lastName, email, cnic, phone } = req.body;
 
     const password = generateRandomString(8);
 
     console.log(password);
 
-    const { query, params } = queries.createWorker({
+    const { sql, params } = queries.createWorker({
       firstName,
       lastName,
       email,
@@ -33,7 +33,7 @@ router.post(
       chairpersonId,
     });
 
-    connection.query(query, params, (error, results) => {
+    connection.query(sql, params, (error, results) => {
       if (error) {
         console.log(error);
         connection.query("ROLLBACK");
@@ -53,8 +53,8 @@ router.post(
  */
 router.get("/", verifyRole([roles.CHAIRPERSON]), (req, res) => {
   const { id: chairpersonId } = req.user;
-  const { query, params } = queries.getWorkersByChairperson({ chairpersonId });
-  connection.query(query, params, (error, results) => {
+  const { sql, params } = queries.getWorkersByChairperson({ chairpersonId });
+  connection.query(sql, params, (error, results) => {
     if (error) {
       return res.status(400).json({
         message: "Something went wrong",
