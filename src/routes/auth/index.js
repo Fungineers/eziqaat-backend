@@ -2,6 +2,7 @@ import { Router } from "express";
 import { connection, queries } from "@/database";
 import { sign } from "jsonwebtoken";
 import { regexps } from "@/constants";
+import { getCredentialField } from "@/utils";
 
 const router = Router();
 
@@ -10,13 +11,7 @@ const router = Router();
  */
 router.post("/signin", (req, res) => {
   const { credential, password } = req.body;
-  const field = regexps.email.test(credential)
-    ? "email"
-    : regexps.cnic.test(credential)
-    ? "cnic"
-    : regexps.phone.test(credential)
-    ? "phone"
-    : null;
+  const field = getCredentialField(credential);
   if (!field) {
     return res.status(400).json({
       message: "Invalid credential",

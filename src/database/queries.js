@@ -19,6 +19,26 @@ export const createUser = ({
   return { query, params };
 };
 
+export const updatePassword = ({ id, password }) => {
+  const query = `
+    UPDATE user
+      SET password = SHA1(UNHEX(SHA1(?)))
+      WHERE id = ?;
+  `;
+  const params = [password, id];
+  return { query, params };
+};
+
+export const resetPassword = ({ credential, password, field }) => {
+  const query = `
+    UPDATE user
+      SET password = SHA1(UNHEX(SHA1(?)))
+      WHERE ${field} = ?;
+  `;
+  const params = [password, credential];
+  return { query, params };
+};
+
 export const authenticateUser = ({ credential, password, field }) => {
   const query = `
     SELECT 
