@@ -6,14 +6,15 @@ import { validateSignup, verifyRole } from "@/middleware";
 
 const router = Router();
 
+/**
+ * Create any user except worker and general secretary
+ */
 router.post(
   "/",
   (req, res, next) => {
     const { role } = req.body;
     if (role === roles.CHAIRPERSON || role === roles.OFFICE_SECRETARY) {
       return verifyRole([roles.GENERAL_SECRETARY])(req, res, next);
-    } else if (role === roles.WORKER) {
-      return verifyRole([roles.CHAIRPERSON])(req, res, next);
     } else if (role === roles.DONOR) {
       if (req.user) {
         return verifyRole([roles.WORKER])(req, res, next);
@@ -44,9 +45,7 @@ router.post(
     connection.query(query, params, (error, results) => {
       if (error) {
         console.log(error);
-        return res
-          .status(400)
-          .json({ message: "Couldn't create chairperson", error });
+        return res.status(400).json({ message: "Couldn't create user", error });
       }
 
       const user = results[3][0];
