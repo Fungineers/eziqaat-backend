@@ -299,3 +299,22 @@ export const approveDonation = ({ donationId, chairpersonId }) => {
   const params = [donationId, chairpersonId, donationId];
   return { sql, params };
 };
+
+export const acceptPendingDonation = ({ donationId, workerId }) => {
+  const sql = `
+    SELECT areaId
+      FROM areaworker
+      WHERE workerId = ?
+      LIMIT 1
+      INTO @areaId;
+    UPDATE donation
+      SET status = "ACCEPTED",
+        workerId = ?,
+        acceptedAt = UTC_TIMESTAMP()
+      WHERE id = ?
+      AND areaId = @areaId
+      AND status = "PENDING";
+  `;
+  const params = [workerId, workerId, donationId];
+  return { sql, params };
+};

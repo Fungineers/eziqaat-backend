@@ -91,4 +91,34 @@ router.post("/pending", verifyRole([roles.CHAIRPERSON]), (req, res) => {
   });
 });
 
+/**
+ * Worker accepts a pending donation
+ */
+router.patch("/:id/accepted", verifyRole([roles.WORKER]), (req, res) => {
+  const { id: donationId } = req.params;
+  const { id: workerId } = req.user;
+  const { sql, params } = queries.acceptPendingDonation({
+    donationId,
+    workerId,
+  });
+  connection.query(sql, params, (error, results) => {
+    if (error) {
+      console.log(error);
+      return res
+        .status(400)
+        .json({ message: "Couldn't accept donation", error });
+    }
+    const { affectedRows, changedRows } = results[1];
+    if (affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ message: "No pending record found in this worker's area" });
+    }
+    if (changedRows === 0) {
+      return res.status(304).json({ message: "Already accepted donation" });
+    }
+    return res.status(200).json({ message: "Donation accepted successfully" });
+  });
+});
+
 export default router;
