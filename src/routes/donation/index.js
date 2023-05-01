@@ -121,4 +121,41 @@ router.patch("/:id/accepted", verifyRole([roles.WORKER]), (req, res) => {
   });
 });
 
+/**
+ * Worker collects an accepted donation
+ */
+router.patch("/:id/collected", verifyRole([roles.WORKER]), (req, res) => {
+  const { id: donationId } = req.params;
+  const { id: workerId } = req.user;
+  const { sql, params } = queries.collectAcceptedDonation({
+    donationId,
+    workerId,
+  });
+  connection.query(sql, params, (error, result) => {
+    if (error) {
+      console.log(error);
+      return res
+        .status(400)
+        .json({ message: "Couldn't collect donation", error });
+    }
+    const { affectedRows, changedRows } = result;
+    if (affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ message: "No accepted record found for this worker" });
+    }
+    if (changedRows === 0) {
+      return res.status(304).json({ message: "Already collected donation" });
+    }
+    /**
+     * TODO: SMS functionality
+     */
+    return res.status(200).json({ message: "Donation collected successfully" });
+  });
+});
+
+/**
+ * Worker collects a new donation
+ */
+
 export default router;

@@ -318,3 +318,16 @@ export const acceptPendingDonation = ({ donationId, workerId }) => {
   const params = [workerId, workerId, donationId];
   return { sql, params };
 };
+
+export const collectAcceptedDonation = ({ donationId, workerId }) => {
+  const sql = `
+    UPDATE donation
+      SET status = "COLLECTED",
+        collectedAt = UTC_TIMESTAMP()
+      WHERE id = ?
+      AND status = "ACCEPTED"
+      AND workerId = ?;
+  `;
+  const params = [donationId, workerId];
+  return { sql, params };
+};
