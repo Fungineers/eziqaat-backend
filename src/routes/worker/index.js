@@ -7,7 +7,7 @@ import { Router } from "express";
 const router = Router();
 
 /**
- * Create worker
+ * Create worker. Must be signed in as a chairperson
  */
 router.post(
   "/",

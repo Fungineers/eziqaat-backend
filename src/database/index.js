@@ -10,6 +10,9 @@ const user = process.env.MYSQL_USER;
 const password = process.env.MYSQL_PASS;
 const database = process.env.MYSQL_DB;
 
+/**
+ * Database connection object
+ */
 export const connection = createConnection({
   host,
   port,
@@ -19,6 +22,11 @@ export const connection = createConnection({
   multipleStatements: true,
 });
 
+/**
+ * Attempts to connect to the database,
+ * @returns {void}
+ * @throws QueryError
+ */
 export const connectDb = () => {
   connection.connect((error) => {
     if (error) {

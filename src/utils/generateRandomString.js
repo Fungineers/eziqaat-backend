@@ -1,4 +1,6 @@
 /**
+ * Generates a random string of alphanumeric
+ * characters of given length
  * @param {number} length
  * @returns {string}
  */
