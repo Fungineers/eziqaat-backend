@@ -157,5 +157,9 @@ router.patch("/:id/collected", verifyRole([roles.WORKER]), (req, res) => {
 /**
  * Worker collects a new donation
  */
+router.post(
+  "/collected",
+  verifyRole([roles.WORKER], (req, res) => {})
+);
 
 export default router;
