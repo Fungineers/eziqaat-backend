@@ -331,3 +331,21 @@ export const collectAcceptedDonation = ({ donationId, workerId }) => {
   const params = [donationId, workerId];
   return { sql, params };
 };
+
+export const addCollectionRecord = ({ amount, address, donorId, workerId }) => {
+  const sql = `
+    SELECT areaId
+      FROM areaworker
+      WHERE workerId = ?
+      LIMIT 1
+      INTO @areaId;
+    SET @id := REPLACE(UUID(), "-", "");
+    SET @createdAt := UTC_TIMESTAMP();
+    INSERT INTO donation (id, amount, address, status, donorId, workerId, areaId, createdAt, collectedAt)
+      VALUES(@id, ?, ?, "COLLECTED", ?, ?, @areaId, @createdAt, @createdAt);
+    SELECT * FROM donation
+      WHERE id = @id;
+  `;
+  const params = [workerId, amount, address, donorId, workerId];
+  return { sql, params };
+};

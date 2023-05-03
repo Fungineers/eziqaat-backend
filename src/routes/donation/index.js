@@ -157,9 +157,25 @@ router.patch("/:id/collected", verifyRole([roles.WORKER]), (req, res) => {
 /**
  * Worker collects a new donation
  */
-router.post(
-  "/collected",
-  verifyRole([roles.WORKER], (req, res) => {})
-);
+router.post("/collected", verifyRole([roles.WORKER]), (req, res) => {
+  const { address, amount, donorId } = req.body;
+  const { id: workerId } = req.user;
+  const { sql, params } = queries.addCollectionRecord({
+    address,
+    amount,
+    donorId,
+    workerId,
+  });
+  connection.query(sql, params, (error, results) => {
+    if (error) {
+      console.log(error);
+      return res
+        .status(400)
+        .json({ message: "Couldn't add new collection record", error });
+    }
+    const donation = results[4][0];
+    return res.status(200).json({ donation });
+  });
+});
 
 export default router;
