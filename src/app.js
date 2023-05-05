@@ -14,6 +14,10 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 
 app.all("*", getUserFromToken);
+
+app.get("/", (req, res) => {
+  return res.status(200).send("Express Server Running");
+});
 app.use("/auth", routes.authRouter);
 app.use("/area", routes.areaRouter);
 app.use("/user", routes.userRouter);
