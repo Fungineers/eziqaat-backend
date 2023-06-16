@@ -13,6 +13,7 @@ export const firebaseApp = admin.initializeApp({
 });
 
 export const createNotification = ({ userId, title, body, type }) => {
+  const createdAt = admin.database.ServerValue.TIMESTAMP;
   firebaseApp
     .database()
     .ref("nofications")
@@ -21,9 +22,12 @@ export const createNotification = ({ userId, title, body, type }) => {
       title,
       body,
       type,
-      createdAt: admin.database.ServerValue.TIMESTAMP,
+      createdAt,
     })
     .then((notificationRef) => {
-      console.log(notificationRef);
-    });
+      console.log(
+        `Type ${type} Notification -> User(${userId}) at ${new Date().toUTCString()}\n${notificationRef}`
+      );
+    })
+    .catch(console.log);
 };
