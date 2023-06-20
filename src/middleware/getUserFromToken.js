@@ -1,5 +1,6 @@
 import { verify } from "jsonwebtoken";
 import { connection, queries } from "@/database";
+import { roles } from "@/constants";
 /**
  * @param {import("express").Request} req
  * @param {import("express").Response} res
@@ -12,8 +13,21 @@ const getUserFromToken = (req, res, next) => {
     const [, token] = authorization.split(" ");
     try {
       const payload = verify(token, process.env.JWT_SECRET);
-      const { id } = payload;
-      const { sql, params } = queries.getUserById({ id });
+      const { id, platform } = payload;
+      const allowedRoles = [];
+      switch (platform) {
+        case "MOBILE":
+          allowedRoles.push(roles.DONOR, roles.WORKER, roles.CHAIRPERSON);
+          break;
+        case "WEB":
+          allowedRoles.push(roles.OFFICE_SECRETARY, roles.GENERAL_SECRETARY);
+          break;
+        default:
+          return res.status(400).json({
+            message: "Missing platform",
+          });
+      }
+      const { sql, params } = queries.getUserById({ id, allowedRoles });
       connection.query(sql, params, (error, results) => {
         if (error) {
           console.log(error);

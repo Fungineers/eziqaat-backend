@@ -1,3 +1,4 @@
+import { roles } from "@/constants";
 import { connection, queries } from "@/database";
 import { createNotification } from "@/firebase";
 import { getCredentialField } from "@/utils";
@@ -20,7 +21,22 @@ router.get("/me", (req, res) => {
 });
 
 router.post("/signin", (req, res) => {
-  const { credential, password } = req.body;
+  const { credential, password, platform } = req.body;
+
+  let allowedRoles = [];
+  switch (platform) {
+    case "MOBILE":
+      allowedRoles.push(roles.DONOR, roles.WORKER, roles.CHAIRPERSON);
+      break;
+    case "WEB":
+      allowedRoles.push(roles.OFFICE_SECRETARY, roles.GENERAL_SECRETARY);
+      break;
+    default:
+      return res.status(400).json({
+        message: "Missing platform",
+      });
+  }
+
   const field = getCredentialField(credential);
   if (!field) {
     return res.status(400).json({
@@ -31,6 +47,7 @@ router.post("/signin", (req, res) => {
     credential,
     password,
     field,
+    allowedRoles,
   });
   connection.query(sql, params, (error, results) => {
     if (error) {
@@ -44,7 +61,7 @@ router.post("/signin", (req, res) => {
         message: "Incorrect set of credentials",
       });
     }
-    const token = sign({ id: user.id }, process.env.JWT_SECRET, {
+    const token = sign({ id: user.id, platform }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
     createNotification({

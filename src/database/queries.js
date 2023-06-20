@@ -81,12 +81,19 @@ export const resetPassword = ({ credential, password, field }) => {
   return { sql, params };
 };
 
-export const authenticateUser = ({ credential, password, field }) => {
+export const authenticateUser = ({
+  credential,
+  password,
+  field,
+  allowedRoles = [],
+}) => {
   const sql = `
     SELECT 
       id, firstName, lastName, email, role, phone, cnic
       FROM user
-      WHERE 
+      WHERE
+        role IN (${allowedRoles.map((role) => `"${role}"`).join(", ")})
+      AND
         ${field} = ?
       AND
         password = SHA1(UNHEX(SHA1(?)));
@@ -95,11 +102,13 @@ export const authenticateUser = ({ credential, password, field }) => {
   return { sql, params };
 };
 
-export const getUserById = ({ id }) => {
+export const getUserById = ({ id, allowedRoles }) => {
   const sql = `
     SELECT * 
       FROM userdata 
-      WHERE id = ?
+    WHERE id = ?
+    AND
+      role IN (${allowedRoles.map((role) => `"${role}"`).join(", ")});
   `;
   const params = [id];
   return { sql, params };
@@ -349,3 +358,5 @@ export const addCollectionRecord = ({ amount, address, donorId, workerId }) => {
   const params = [workerId, amount, address, donorId, workerId];
   return { sql, params };
 };
+
+export const getPendingDonations = () => {};
