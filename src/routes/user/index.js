@@ -231,7 +231,8 @@ router.patch("/password", (req, res) => {
      *
      */
     return res.status(200).json({
-      message: "Password changed successfully",
+      message:
+        "Password reset successfully. We've sent you the new password as SMS",
     });
   });
 });
