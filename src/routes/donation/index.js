@@ -6,6 +6,16 @@ import { Router } from "express";
 const router = Router();
 
 /**
+ * Get donations
+ */
+router.get("/", verifyRole([roles.CHAIRPERSON, roles.WORKER]), (req, res) => {
+  // const { id: userId, role } = req.user
+  // const { search, limit, offset } = req.query
+  // const { sql, params } = queries.getDonations()
+  console.log(req.user);
+});
+
+/**
  * Donor requests for doorstep donation
  */
 router.post("/requested", verifyRole([roles.DONOR]), (req, res) => {

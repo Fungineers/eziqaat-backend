@@ -61,13 +61,14 @@ export const createWorker = ({
   return { sql, params };
 };
 
-export const updatePassword = ({ id, password }) => {
+export const updatePassword = ({ id, currentPassword, newPassword }) => {
   const sql = `
     UPDATE user
-      SET password = SHA1(UNHEX(SHA1(?)))
-      WHERE id = ?;
+    SET password = SHA1(UNHEX(SHA1(?)))
+    WHERE id = ?
+    AND password = SHA1(UNHEX(SHA1(?)));
   `;
-  const params = [password, id];
+  const params = [newPassword, id, currentPassword];
   return { sql, params };
 };
 
@@ -359,4 +360,24 @@ export const addCollectionRecord = ({ amount, address, donorId, workerId }) => {
   return { sql, params };
 };
 
-export const getPendingDonations = () => {};
+export const changeEmail = ({ userId, email }) => {
+  const sql = `
+    UPDATE user
+    SET email = ?
+    WHERE id = ?;
+  `;
+  const params = [email, userId];
+  return { sql, params };
+};
+
+export const changePhone = ({ userId, phone }) => {
+  const sql = `
+    UPDATE user
+    SET phone = ?
+    WHERE id = ?;
+  `;
+  const params = [phone, userId];
+  return { sql, params };
+};
+
+export const changePassword = ({ userId, password }) => {};

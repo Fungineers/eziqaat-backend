@@ -55,6 +55,96 @@ router.post(
 );
 
 /**
+ * Change Email
+ */
+router.put("/email", (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({
+      error: "Couldn't process request",
+      message: "Access Denied",
+    });
+  }
+  const { id: userId } = req.user;
+  const { email } = req.body;
+  const isValid = regexps.email.test(email);
+  if (!isValid) {
+    return res.status(400).json({
+      error: "Couldn't process request",
+      message: "Incorrect email format",
+    });
+  }
+  const { sql, params } = queries.changeEmail({ userId, email });
+  connection.query(sql, params, (error, result) => {
+    if (error) {
+      return res.status(400).json({
+        message: "Email is not unique",
+        error,
+      });
+    }
+    const { changedRows, affectedRows } = result;
+    if (affectedRows === 0) {
+      return res.status(404).json({
+        message: "No user record found",
+        error,
+      });
+    }
+    if (changedRows === 0) {
+      return res.status(403).json({
+        message: "Email can't be same as old email",
+      });
+    }
+    return res.status(200).json({
+      message: "Email changed successfully",
+    });
+  });
+});
+
+/**
+ * Change Phone
+ */
+router.put("/phone", (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({
+      error: "Couldn't process request",
+      message: "Access Denied",
+    });
+  }
+  const { id: userId } = req.user;
+  const { phone } = req.body;
+  const isValid = regexps.phone.test(phone);
+  if (!isValid) {
+    return res.status(400).json({
+      error: "Couldn't process request",
+      message: "Incorrect phone format",
+    });
+  }
+  const { sql, params } = queries.changePhone({ userId, phone });
+  connection.query(sql, params, (error, result) => {
+    if (error) {
+      return res.status(400).json({
+        message: "Phone is not unique",
+        error,
+      });
+    }
+    const { changedRows, affectedRows } = result;
+    if (affectedRows === 0) {
+      return res.status(404).json({
+        message: "No user record found",
+        error,
+      });
+    }
+    if (changedRows === 0) {
+      return res.status(403).json({
+        message: "Phone can't be same as old phone",
+      });
+    }
+    return res.status(200).json({
+      message: "Phone changed successfully",
+    });
+  });
+});
+
+/**
  * Change password
  */
 router.put("/password", (req, res) => {
@@ -65,8 +155,8 @@ router.put("/password", (req, res) => {
     });
   }
   const { id } = req.user;
-  const { password } = req.body;
-  const isValid = regexps.password.test(password);
+  const { currentPassword, newPassword } = req.body;
+  const isValid = regexps.password.test(newPassword);
   if (!isValid) {
     return res.status(400).json({
       error: "Please select a strong password",
@@ -74,18 +164,22 @@ router.put("/password", (req, res) => {
         "Password must be 8-20 characters long, with at least one uppercase, one lowercase, one numeric, and one special character",
     });
   }
-  const { sql, params } = queries.updatePassword({ id, password });
+  const { sql, params } = queries.updatePassword({
+    id,
+    currentPassword,
+    newPassword,
+  });
   connection.query(sql, params, (error, result) => {
     if (error) {
       return res.status(400).json({
-        message: "Password couldn't be changed",
+        message: "Password couldn't be changed.",
         error,
       });
     }
     const { changedRows, affectedRows } = result;
     if (affectedRows === 0) {
       return res.status(404).json({
-        message: "No user record found",
+        message: "Incorrect old password",
         error,
       });
     }
