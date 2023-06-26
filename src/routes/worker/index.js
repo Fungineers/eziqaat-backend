@@ -66,4 +66,46 @@ router.get("/", verifyRole([roles.CHAIRPERSON]), (req, res) => {
   });
 });
 
+router.get("/:id", verifyRole([roles.CHAIRPERSON]), (req, res) => {
+  const { id: chairpersonId } = req.user;
+  const { id: workerId } = req.params;
+  const { sql, params } = queries.getWorkersDetailsById({
+    chairpersonId,
+    workerId,
+  });
+  connection.query(sql, params, (error, results) => {
+    if (error) {
+      return res.status(400).json({
+        message: "Something went wrong",
+        error,
+      });
+    }
+    if (!results.length) {
+      return res.status(400).json({ message: "Worker not found" });
+    }
+    const { donationCount, status, cashFlow, ...rest } = results[0];
+    const donations = results.reduce(
+      (prev, row) => {
+        switch (row.status) {
+          case "ACCEPTED":
+            const accepted = prev.accepted + row.donationCount;
+            return { ...prev, accepted };
+          case "COLLECTED":
+            const collected = prev.collected + row.donationCount;
+            const cashFlow = prev.cashFlow + +row.cashFlow;
+            return { ...prev, collected, cashFlow };
+          default:
+            return prev;
+        }
+      },
+      {
+        accepted: 0,
+        collected: 0,
+        cashFlow: 0,
+      }
+    );
+    return res.status(200).json({ workerDetails: { ...rest, donations } });
+  });
+});
+
 export default router;

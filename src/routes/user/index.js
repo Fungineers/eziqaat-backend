@@ -206,6 +206,7 @@ router.patch("/password", (req, res) => {
     });
   }
   const password = generateRandomString(8);
+  console.log(password);
   const { sql, params } = queries.resetPassword({
     credential,
     password,

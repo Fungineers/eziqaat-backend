@@ -380,4 +380,15 @@ export const changePhone = ({ userId, phone }) => {
   return { sql, params };
 };
 
+export const getWorkersDetailsById = ({ chairpersonId, workerId }) => {
+  const sql = `
+    SELECT * 
+    FROM workerdetails
+    WHERE id = ?
+    AND chairpersonId = ?
+  `;
+  const params = [workerId, chairpersonId];
+  return { sql, params };
+};
+
 export const changePassword = ({ userId, password }) => {};
