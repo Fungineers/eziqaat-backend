@@ -1,50 +1,74 @@
-import { regexps, roles } from "@/constants";
-import createUser, { authorizeCreateUser } from "@/controllers/create-user";
+import changeEmail, { changeEmailValidators } from "@/controllers/change-email";
+import changePassword, {
+  changePasswordValidators,
+} from "@/controllers/change-password";
+import changePhone, { changePhoneValidators } from "@/controllers/change-phone";
+import createUser, {
+  authorizeCreateUser,
+  createUserValidators,
+} from "@/controllers/create-user";
+import removeEmail from "@/controllers/remove-email";
+import resetPassword, {
+  resetPasswordValidators,
+} from "@/controllers/reset-password";
+import verifyEmail, {
+  authorizeVerifyEmail,
+  verifyEmailValidators,
+} from "@/controllers/verify-email";
 import validateBody from "@/middleware/validate-body";
+import verifyLogin from "@/middleware/verify-login";
 import { Router } from "express";
-import { body } from "express-validator";
 
 const userRouter = Router();
 
 userRouter.post(
   "/",
-
-  body("firstName").trim().notEmpty().withMessage("First name is required"),
-
-  body("lastName").trim().notEmpty().withMessage("Last name is required"),
-
-  body("email")
-    .trim()
-    .optional()
-    .isEmail()
-    .withMessage("Incorrect email format")
-    .normalizeEmail(),
-
-  body("role")
-    .trim()
-    .notEmpty()
-    .isIn(Object.values(roles))
-    .withMessage("Invalid role"),
-
-  body("phone")
-    .trim()
-    .notEmpty()
-    .withMessage("Phone is required")
-    .matches(regexps.phone)
-    .withMessage("Incorrect phone format"),
-
-  body("cnic")
-    .trim()
-    .notEmpty()
-    .withMessage("Phone is required")
-    .matches(regexps.cnic)
-    .withMessage("Invalid CNIC"),
-
+  ...createUserValidators,
   validateBody,
-
   authorizeCreateUser,
-
   createUser
+);
+
+userRouter.put(
+  "/password",
+  verifyLogin,
+  ...changePasswordValidators,
+  validateBody,
+  changePassword
+);
+
+userRouter.put(
+  "/password/reset",
+  ...resetPasswordValidators,
+  validateBody,
+  resetPassword
+);
+
+userRouter.put(
+  "/email",
+  verifyLogin,
+  ...changeEmailValidators,
+  validateBody,
+  changeEmail
+);
+
+userRouter.delete("/email", verifyLogin, removeEmail);
+
+userRouter.post(
+  "/email/verify",
+  verifyLogin,
+  authorizeVerifyEmail,
+  ...verifyEmailValidators,
+  validateBody,
+  verifyEmail
+);
+
+userRouter.put(
+  "/phone",
+  verifyLogin,
+  ...changePhoneValidators,
+  validateBody,
+  changePhone
 );
 
 export default userRouter;

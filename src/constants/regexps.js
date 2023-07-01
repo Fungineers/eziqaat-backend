@@ -4,6 +4,7 @@ const regexps = {
   password:
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,20}$/,
   cnic: /^([0-9]{5})([0-9]{7})([0-9]{1})+/,
+  emailOtp: /^[0-9]{4}$/,
 };
 
 export default regexps;

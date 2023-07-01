@@ -1,12 +1,14 @@
-import { roles } from "@/constants";
+import { regexps, roles } from "@/constants";
 import db from "@/database";
-import { generateRandomString } from "@/utils";
+import generateRandomOTP from "@/utils/generate-random-otp";
+import generateRandomPassword from "@/utils/generate-random-password";
+import { body } from "express-validator";
 
 export const authorizeCreateUser = (req, res, next) => {
   const { user } = req;
+  const { role: userRole } = req.body;
   if (user) {
     const { role: creatorRole } = user;
-    const { role: userRole } = req.body;
     if (
       (creatorRole === roles.GENERAL_SECRETARY &&
         [roles.CHAIRPERSON, roles.OFFICE_SECRETARY].includes(userRole)) ||
@@ -17,18 +19,60 @@ export const authorizeCreateUser = (req, res, next) => {
       return res.status(401).json({ message: "Access Denied" });
     }
   } else {
-    return res.status(401).json({ message: "Access Denied" });
+    if (userRole === roles.DONOR) {
+      next();
+    } else {
+      return res.status(401).json({ message: "Access Denied" });
+    }
   }
 };
+
+export const createUserValidators = [
+  body("firstName").trim().notEmpty().withMessage("First name is required"),
+
+  body("lastName").trim().notEmpty().withMessage("Last name is required"),
+
+  body("email").trim().optional().isEmail().withMessage("Invalid email"),
+
+  body("role")
+    .trim()
+    .notEmpty()
+    .isIn(Object.values(roles))
+    .withMessage("Invalid role"),
+
+  body("phone")
+    .trim()
+    .notEmpty()
+    .withMessage("Phone is required")
+    .matches(regexps.phone)
+    .withMessage("Invalid phone"),
+
+  body("cnic")
+    .trim()
+    .notEmpty()
+    .withMessage("Phone is required")
+    .matches(regexps.cnic)
+    .withMessage("Invalid CNIC"),
+];
 
 const createUser = (req, res) => {
   const { firstName, lastName, email, role, phone, cnic } = req.body;
 
-  const password = generateRandomString();
+  const password = generateRandomPassword();
+  const emailOTP = generateRandomOTP();
 
   console.log(password);
 
-  db.createUser({ firstName, lastName, email, role, phone, cnic, password })
+  db.createUser({
+    firstName,
+    lastName,
+    email,
+    role,
+    phone,
+    cnic,
+    password,
+    emailOTP,
+  })
     .then((result) => {
       try {
         const user = result[0][0][0];

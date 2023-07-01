@@ -1,6 +1,4 @@
-const getRandomCharacter = (characters) => {
-  return characters.charAt(Math.floor(Math.random() * characters.length));
-};
+import getRandomCharacter from "./get-random-character";
 
 const shuffleString = (string) => {
   const shuffledString = string.split("");
@@ -13,7 +11,7 @@ const shuffleString = (string) => {
   return shuffledString.join("");
 };
 
-const generateRandomString = () => {
+const generateRandomPassword = () => {
   const UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
   const DIGIT_CHARS = "0123456789";
@@ -46,4 +44,4 @@ const generateRandomString = () => {
   return randomString;
 };
 
-export default generateRandomString;
+export default generateRandomPassword;

@@ -1,4 +1,4 @@
-const { roles } = require("@/constants");
+import { roles } from "@/constants";
 
 const authorizeRole = (allowedRoles = roles) => {
   return (req, res, next) => {
