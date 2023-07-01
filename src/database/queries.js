@@ -391,4 +391,9 @@ export const getWorkersDetailsById = ({ chairpersonId, workerId }) => {
   return { sql, params };
 };
 
+export const getChairpersonDashboardData = ({ chairpersonId }) => {
+  const sql = `
+  `;
+};
+
 export const changePassword = ({ userId, password }) => {};
