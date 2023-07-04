@@ -1,12 +1,10 @@
 import cors from "cors";
-import { config } from "dotenv";
 import express, { json, urlencoded } from "express";
+import getEnv from "./config/get-env";
 import db from "./database";
-import userRouter from "./routes/user.route";
-import authRouter from "./routes/auth.route";
 import authenticateUser from "./middleware/authenticate-user";
-
-config();
+import authRouter from "./routes/auth.route";
+import userRouter from "./routes/user.route";
 
 const app = express();
 
@@ -14,7 +12,7 @@ app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: false }));
 
-const port = process.env.port || 3001;
+const port = getEnv("port") || 3001;
 
 app.all("*", authenticateUser);
 

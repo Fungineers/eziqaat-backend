@@ -1,22 +1,14 @@
-import { config } from "dotenv";
+import getEnv from "@/config/get-env";
 import { createConnection } from "mysql2/promise";
-
-config();
-
-const host = process.env.MYSQL_HOST;
-const port = process.env.MYSQL_PORT;
-const user = process.env.MYSQL_USER;
-const password = process.env.MYSQL_PASS;
-const database = process.env.MYSQL_DB;
 
 class DB {
   constructor() {
     this.connection = createConnection({
-      host,
-      port,
-      user,
-      password,
-      database,
+      host: getEnv("MYSQL_HOST"),
+      port: getEnv("MYSQL_PORT"),
+      user: getEnv("MYSQL_USER"),
+      password: getEnv("MYSQL_PASS"),
+      database: getEnv("MYSQL_DB"),
     });
   }
 
@@ -117,6 +109,17 @@ class DB {
   }
 }
 
-const db = new DB();
+class DBSingleton {
+  static db;
+
+  static getDb() {
+    if (!this.db) {
+      this.db = new DB();
+    }
+    return this.db;
+  }
+}
+
+const db = DBSingleton.getDb();
 
 export default db;
