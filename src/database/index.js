@@ -1,6 +1,10 @@
 import getEnv from "@/config/get-env";
 import { createConnection } from "mysql2/promise";
 
+/**
+ * A class that handles the db connection, and provides
+ * client calls as methods
+ */
 class DB {
   constructor() {
     this.connection = createConnection({
@@ -12,6 +16,9 @@ class DB {
     });
   }
 
+  /**
+   * Test the database connection
+   */
   async connect() {
     const connection = await this.connection;
     const { host, port, user, database } = connection.config;
@@ -27,6 +34,31 @@ class DB {
       });
   }
 
+  /**
+   * A base method for providing db client query call
+   * @param {string} sql
+   * @param {string[]} values
+   * @returns
+   */
+  async getQuery(sql, values) {
+    const connection = await this.connection;
+    return connection.query(sql, values);
+  }
+
+  /**
+   * Client call for creating new user
+   * @param {{
+   *   firstName: string,
+   *   lastName: string,
+   *   email: string,
+   *   role: string,
+   *   phone: string,
+   *   cnic: string,
+   *   password: string,
+   *   emailOTP: string,
+   * }} param0
+   * @returns
+   */
   async createUser({
     firstName,
     lastName,
@@ -37,9 +69,8 @@ class DB {
     password,
     emailOTP,
   }) {
-    const connection = await this.connection;
     const sql = `CALL CREATE_USER(?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [
+    const values = [
       firstName,
       lastName,
       email,
@@ -49,69 +80,137 @@ class DB {
       password,
       emailOTP,
     ];
-    return connection.query(sql, params);
+    return this.getQuery(sql, values);
   }
 
   async verifyCredentials({ credential, password, platform }) {
-    const connection = await this.connection;
     const sql = `CALL VERIFY_CREDENTIALS(?, ?, ?)`;
-    const params = [credential, password, platform];
-    return connection.query(sql, params);
+    const values = [credential, password, platform];
+    return this.getQuery(sql, values);
   }
 
   async getUserById({ id }) {
-    const connection = await this.connection;
     const sql = `SELECT * FROM user_data WHERE id = ?`;
-    const params = [id];
-    return connection.query(sql, params);
+    const values = [id];
+    return this.getQuery(sql, values);
   }
 
   async changeEmail({ id, email, emailOtp }) {
-    const connection = await this.connection;
     const sql = `CALL CHANGE_EMAIL(?, ?, ?)`;
-    const params = [id, email, emailOtp];
-    return connection.query(sql, params);
+    const values = [id, email, emailOtp];
+    return this.getQuery(sql, values);
   }
 
   async verifyEmail({ id, emailOtp }) {
-    const connection = await this.connection;
     const sql = `CALL VERIFY_EMAIL(?, ?)`;
-    const params = [id, emailOtp];
-    return connection.query(sql, params);
+    const values = [id, emailOtp];
+    return this.getQuery(sql, values);
   }
 
   async removeEmail({ id }) {
-    const connection = await this.connection;
     const sql = `CALL REMOVE_EMAIL(?)`;
-    const params = [id];
-    return connection.query(sql, params);
+    const values = [id];
+    return this.getQuery(sql, values);
   }
 
   async changePassword({ id, password, newPassword }) {
-    const connection = await this.connection;
     const sql = `CALL CHANGE_PASSWORD(?, ?, ?)`;
-    const params = [id, password, newPassword];
-    return connection.query(sql, params);
+    const values = [id, password, newPassword];
+    return this.getQuery(sql, values);
   }
 
   async resetPassword({ credential, password }) {
-    const connection = await this.connection;
     const sql = `CALL RESET_PASSWORD(?, ?)`;
-    const params = [credential, password];
-    return connection.query(sql, params);
+    const values = [credential, password];
+    return this.getQuery(sql, values);
   }
 
   async changePhone({ id, phone }) {
-    const connection = await this.connection;
     const sql = `CALL CHANGE_PHONE(?, ?)`;
-    const params = [id, phone];
-    return connection.query(sql, params);
+    const values = [id, phone];
+    return this.getQuery(sql, values);
+  }
+
+  async createArea({ areaName }) {
+    const sql = `CALL CREATE_AREA(?)`;
+    const values = [areaName];
+    return this.getQuery(sql, values);
+  }
+
+  async changeAreaName({ id, areaName }) {
+    const sql = `CALL CHANGE_AREA_NAME(?, ?)`;
+    const values = [id, areaName];
+    return this.getQuery(sql, values);
+  }
+
+  async deleteArea({ id }) {
+    const sql = `CALL DELETE_AREA(?)`;
+    const values = [id];
+    return this.getQuery(sql, values);
+  }
+
+  async assignAreaToChairperson({ areaId, chairpersonId }) {
+    const sql = `CALL ASSIGN_AREA_TO_CHAIRPERSON(?, ?)`;
+    const values = [areaId, chairpersonId];
+    return this.getQuery(sql, values);
+  }
+
+  async unassignAreaFromChairperson({ areaId }) {
+    const sql = `CALL UNASSIGN_AREA_FROM_CHAIRPERSON(?)`;
+    const values = [areaId];
+    return this.getQuery(sql, values);
+  }
+
+  async donorDonationRequest({ donorId, areaId, amount, address }) {
+    const sql = `CALL DONOR_DONATION_REQUEST(?, ?, ?, ?)`;
+    const values = [donorId, areaId, amount, address];
+    return this.getQuery(sql, values);
+  }
+
+  async approveDonationRequest({ donationId }) {
+    const sql = `CALL APPROVE_DONATION_REQUEST(?)`;
+    const values = [donationId];
+    return this.getQuery(sql, values);
+  }
+
+  async addPendingDonation({ donorId, areaId, amount, address }) {
+    const sql = `CALL ADD_PENDING_DONATION(?, ?, ?, ?)`;
+    const values = [donorId, areaId, amount, address];
+    return this.getQuery(sql, values);
+  }
+
+  async addPendingDonationUnregistered({ refName, address, phone, amount }) {
+    const sql = `CALL ADD_PENDING_DONATION_UNREGISTERED(?, ?, ?, ?)`;
+    const values = [refName, address, phone, amount];
+    return this.getQuery(sql, values);
+  }
+
+  async acceptPendingDonation({ donationId, workerId }) {
+    const sql = `CALL ACCEPT_PENDING_DONATION(?, ?)`;
+    const values = [donationId, workerId];
+    return this.getQuery(sql, values);
+  }
+
+  async collectAcceptedDonation({ donationId }) {
+    const sql = `CALL COLLECT_ACCEPTED_DONATION(?)`;
+    const values = [donationId];
+    return this.getQuery(sql, values);
+  }
+
+  async addNewCollection({ donorId, areaId, amount, address }) {
+    const sql = `CALL ADD_NEW_COLLECTION(?, ?, ?, ?)`;
+    const values = [donorId, areaId, amount, address];
+    return this.getQuery(sql, values);
   }
 }
 
 class DBSingleton {
   static db;
 
+  /**
+   * Get the reference to single DB client instance
+   * @returns {DB}
+   */
   static getDb() {
     if (!this.db) {
       this.db = new DB();

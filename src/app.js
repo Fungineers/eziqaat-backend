@@ -5,6 +5,7 @@ import db from "./database";
 import authenticateUser from "./middleware/authenticate-user";
 import authRouter from "./routes/auth.route";
 import userRouter from "./routes/user.route";
+import areaRouter from "./routes/area.route";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.all("*", authenticateUser);
 
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
+app.use("/area", areaRouter);
 
 app.listen(port, () => {
   console.log(`⚡ Server is listening on port ${port}`);
