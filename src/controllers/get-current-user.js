@@ -1,7 +1,7 @@
 const getCurrentUser = (req, res) => {
   const { user } = req;
   if (user) {
-    res.status(201).json({
+    res.status(200).json({
       message: "Retrieved the logged in user",
       user,
     });

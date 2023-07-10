@@ -31,7 +31,7 @@ const login = (req, res) => {
             const accessToken = generateToken({ id, role, platform });
 
             res
-              .status(201)
+              .status(200)
               .setHeader("Authorization", `Bearer ${accessToken}`)
               .json({
                 message: "Logged in successfully",

@@ -26,7 +26,12 @@ const authenticateUser = (req, res, next) => {
     db.getUserById({ id }).then((result) => {
       const user = result[0][0];
       if (user) {
-        req.user = user;
+        if (user.role !== roles.WORKER) {
+          const { areaId, assignedAt, ...rest } = user;
+          req.user = rest;
+        } else {
+          req.user = user;
+        }
       }
       next();
     });

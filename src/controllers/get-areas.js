@@ -1,0 +1,1 @@
+const getAreas = (req, res) => {};

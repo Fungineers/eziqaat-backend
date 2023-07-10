@@ -1,44 +1,15 @@
-import { regexps, roles } from "@/constants";
+import { regexps } from "@/constants";
 import db from "@/database";
 import generateRandomOTP from "@/utils/generate-random-otp";
 import generateRandomPassword from "@/utils/generate-random-password";
 import { body } from "express-validator";
 
-export const authorizeCreateUser = (req, res, next) => {
-  const { user } = req;
-  const { role: userRole } = req.body;
-  if (user) {
-    const { role: creatorRole } = user;
-    if (
-      (creatorRole === roles.GENERAL_SECRETARY &&
-        [roles.CHAIRPERSON, roles.OFFICE_SECRETARY].includes(userRole)) ||
-      (creatorRole === roles.CHAIRPERSON && userRole === roles.WORKER)
-    ) {
-      next();
-    } else {
-      return res.status(401).json({ message: "Access Denied" });
-    }
-  } else {
-    if (userRole === roles.DONOR) {
-      next();
-    } else {
-      return res.status(401).json({ message: "Access Denied" });
-    }
-  }
-};
-
-export const createUserValidators = [
+export const createWorkerValidators = [
   body("firstName").trim().notEmpty().withMessage("First name is required"),
 
   body("lastName").trim().notEmpty().withMessage("Last name is required"),
 
   body("email").trim().optional().isEmail().withMessage("Invalid email"),
-
-  body("role")
-    .trim()
-    .notEmpty()
-    .isIn(Object.values(roles))
-    .withMessage("Invalid role"),
 
   body("phone")
     .trim()
@@ -55,19 +26,20 @@ export const createUserValidators = [
     .withMessage("Invalid CNIC"),
 ];
 
-const createUser = (req, res) => {
-  const { firstName, lastName, email, role, phone, cnic } = req.body;
+const createWorker = (req, res) => {
+  const { id: chairpersonId } = req.user;
+  const { firstName, lastName, email, phone, cnic } = req.body;
 
   const password = generateRandomPassword();
   const emailOTP = generateRandomOTP();
 
   console.log(password);
 
-  db.createUser({
+  db.createWorker({
+    chairpersonId,
     firstName,
     lastName,
     email,
-    role,
     phone,
     cnic,
     password,
@@ -75,10 +47,10 @@ const createUser = (req, res) => {
   })
     .then((result) => {
       try {
-        const user = result[0][0][0];
+        const worker = result[0][0][0];
         res.status(201).json({
-          message: "User created sucessfully",
-          user,
+          message: "Worker created sucessfully",
+          worker,
         });
       } catch (error) {
         console.log(error);
@@ -94,5 +66,4 @@ const createUser = (req, res) => {
       });
     });
 };
-
-export default createUser;
+export default createWorker;

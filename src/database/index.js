@@ -1,4 +1,5 @@
 import getEnv from "@/config/get-env";
+import { roles } from "@/constants";
 import { createConnection } from "mysql2/promise";
 
 /**
@@ -83,6 +84,30 @@ class DB {
     return this.getQuery(sql, values);
   }
 
+  async createWorker({
+    chairpersonId,
+    firstName,
+    lastName,
+    email,
+    phone,
+    cnic,
+    password,
+    emailOTP,
+  }) {
+    const sql = `CALL CREATE_WORKER(?, ?, ?, ?, ?, ?, ?, ?)`;
+    const values = [
+      chairpersonId,
+      firstName,
+      lastName,
+      email,
+      phone,
+      cnic,
+      password,
+      emailOTP,
+    ];
+    return this.getQuery(sql, values);
+  }
+
   async verifyCredentials({ credential, password, platform }) {
     const sql = `CALL VERIFY_CREDENTIALS(?, ?, ?)`;
     const values = [credential, password, platform];
@@ -113,9 +138,9 @@ class DB {
     return this.getQuery(sql, values);
   }
 
-  async changePassword({ id, password, newPassword }) {
+  async changePassword({ id, currentPassword, newPassword }) {
     const sql = `CALL CHANGE_PASSWORD(?, ?, ?)`;
-    const values = [id, password, newPassword];
+    const values = [id, currentPassword, newPassword];
     return this.getQuery(sql, values);
   }
 
@@ -201,6 +226,46 @@ class DB {
     const sql = `CALL ADD_NEW_COLLECTION(?, ?, ?, ?)`;
     const values = [donorId, areaId, amount, address];
     return this.getQuery(sql, values);
+  }
+
+  async getChairpersonArea({ id }) {
+    const sql = `SELECT * FROM area WHERE chairpersonId = ?`;
+    const values = [id];
+    return this.getQuery(sql, values);
+  }
+
+  async getWorkerArea({ areaId }) {
+    const sql = `SELECT * FROM area WHERE id = ?`;
+    const values = [areaId];
+    return this.getQuery(sql, values);
+  }
+
+  async getActiveWorkersByAreaId({ areaId }) {
+    const sql = `
+      SELECT * FROM user_data 
+      WHERE areaId = ? 
+      AND active = ? 
+      AND role = ?`;
+
+    const values = [areaId, true, roles.WORKER];
+    return this.getQuery(sql, values);
+  }
+
+  async getInActiveWorkersByAreaId({ areaId }) {
+    const sql = `
+      SELECT * FROM user_data 
+      WHERE areaId = ? 
+      AND active = ? 
+      AND role = ?`;
+
+    const values = [areaId, false, roles.WORKER];
+    return this.getQuery(sql, values);
+  }
+
+  async getWorkerDetails({ workerId }) {
+    const sql = `
+      
+    `;
   }
 }
 

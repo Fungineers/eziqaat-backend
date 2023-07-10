@@ -3,7 +3,7 @@ import db from "@/database";
 import { body } from "express-validator";
 
 export const changePasswordValidators = [
-  body("password")
+  body("currentPassword")
     .trim()
     .notEmpty()
     .withMessage("Current password is required"),
@@ -20,17 +20,20 @@ export const changePasswordValidators = [
 
 const changePassword = (req, res) => {
   const { id } = req.user;
-  const { password, newPassword } = req.body;
+  const { currentPassword, newPassword } = req.body;
 
-  if (password === newPassword) {
+  if (currentPassword === newPassword) {
     return res
       .status(403)
       .json({ message: "Please choose a different new password" });
   }
 
-  db.changePassword({ id, password, newPassword })
+  db.changePassword({ id, currentPassword, newPassword })
     .then((results) => {
       const { affectedRows } = results[0];
+
+      console.log(results);
+
       if (affectedRows === 0) {
         return res.status(403).json({
           message:

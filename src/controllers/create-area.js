@@ -18,7 +18,7 @@ const createArea = (req, res) => {
     .then((result) => {
       try {
         const area = result[0][0][0];
-        res.status(200).json({
+        res.status(201).json({
           message: "Area created successfully",
           area,
         });
