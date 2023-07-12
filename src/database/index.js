@@ -14,6 +14,7 @@ class DB {
       user: getEnv("MYSQL_USER"),
       password: getEnv("MYSQL_PASS"),
       database: getEnv("MYSQL_DB"),
+      multipleStatements: true,
     });
   }
 
@@ -266,6 +267,52 @@ class DB {
     const sql = `
       
     `;
+  }
+
+  async getRequestedDonations({ areaId }) {
+    const sql = `
+      SELECT * FROM requested_donations 
+      WHERE areaId = ? 
+      AND active = ?
+    `;
+
+    const values = [areaId, true];
+    return this.getQuery(sql, values);
+  }
+
+  async getAreas() {
+    const sql = `
+      SELECT * FROM area
+      WHERE active = ?
+    `;
+    const values = [true];
+    return this.getQuery(sql, values);
+  }
+
+  async getDonorRequests({ donorId }) {
+    const sql = `
+      SELECT * FROM donor_requests
+      WHERE donorId = ?
+    `;
+    const values = [donorId];
+    return this.getQuery(sql, values);
+  }
+
+  async getDonorStats({ donorId }) {
+    const sql = `
+      SELECT COUNT(id) AS collectionCount FROM donation WHERE status = ? AND donorId = ?;
+      SELECT SUM(amount) AS totalCashFlow FROM donation WHERE status = ? AND donorId = ?;
+      SELECT COUNT(id) AS requestCount FROM donation WHERE status != ? AND donorId = ?;
+    `;
+    const values = [
+      "COLLECTED",
+      donorId,
+      "COLLECTED",
+      donorId,
+      "COLLECTED",
+      donorId,
+    ];
+    return this.getQuery(sql, values);
   }
 }
 

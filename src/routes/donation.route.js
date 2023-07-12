@@ -20,6 +20,8 @@ import collectAcceptDonation, {
 import donorDonationRequest, {
   donorDonationRequestValidator,
 } from "@/controllers/donor-donation-request";
+import getDonorRequests from "@/controllers/get-donor-requests";
+import getRequestedDonations from "@/controllers/get-requested-donations";
 import authorizeRole from "@/middleware/authorize-role";
 import validateBody from "@/middleware/validate-body";
 import verifyLogin from "@/middleware/verify-login";
@@ -27,7 +29,6 @@ import { Router } from "express";
 
 const donationRouter = Router();
 
-// Donor request
 donationRouter.post(
   "/request",
   verifyLogin,
@@ -35,6 +36,20 @@ donationRouter.post(
   ...donorDonationRequestValidator,
   validateBody,
   donorDonationRequest
+);
+
+donationRouter.get(
+  "/requested",
+  verifyLogin,
+  authorizeRole([roles.CHAIRPERSON]),
+  getRequestedDonations
+);
+
+donationRouter.get(
+  "/donor-requests",
+  verifyLogin,
+  authorizeRole([roles.DONOR]),
+  getDonorRequests
 );
 
 donationRouter.post(

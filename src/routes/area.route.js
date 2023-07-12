@@ -4,6 +4,7 @@ import changeAreaName, {
   changeAreaNameValidators,
 } from "@/controllers/change-area-name";
 import createArea, { createAreaValidators } from "@/controllers/create-area";
+import getAreas from "@/controllers/get-areas";
 import unassignAreaFromChairperson from "@/controllers/unassign-area-from-chairperson";
 import authorizeRole from "@/middleware/authorize-role";
 import validateBody from "@/middleware/validate-body";
@@ -20,6 +21,8 @@ areaRouter.post(
   validateBody,
   createArea
 );
+
+areaRouter.get("/", getAreas);
 
 areaRouter.patch(
   "/:id",
