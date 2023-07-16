@@ -236,17 +236,33 @@ class DB {
   }
 
   async getWorkerArea({ areaId }) {
-    const sql = `SELECT * FROM area WHERE id = ?`;
+    const sql = `
+      SELECT * 
+      FROM area 
+      WHERE id = ?
+    `;
     const values = [areaId];
     return this.getQuery(sql, values);
   }
 
-  async getActiveWorkersByAreaId({ areaId }) {
+  async getActiveWorkersByAreaId({ areaId, search = "" }) {
     const sql = `
-      SELECT * FROM user_data 
+      SELECT * 
+      FROM user_data 
       WHERE areaId = ? 
       AND active = ? 
-      AND role = ?`;
+      AND role = ?
+      AND (
+        CONCAT(firstName, " ", lastName) 
+          LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+        OR email LIKE "%${search}%"
+      )
+      ORDER BY 
+        active DESC, 
+        createdAt ASC;
+    `;
 
     const values = [areaId, true, roles.WORKER];
     return this.getQuery(sql, values);
@@ -309,16 +325,132 @@ class DB {
       donorId,
       "COLLECTED",
       donorId,
-      "COLLECTED",
+      "REQUESTED",
       donorId,
     ];
+    return this.getQuery(sql, values);
+  }
+
+  async getAreaStats({ areaId }) {
+    const sql = `
+      SELECT COUNT(id) 
+      AS collectionCount 
+      FROM donation 
+      WHERE status = ? 
+      AND areaId = ?;
+      
+      SELECT SUM(amount) 
+      AS totalCashFlow 
+      FROM donation 
+      WHERE status = ? 
+      AND areaId = ?;
+      
+      SELECT COUNT(id) 
+      AS requestCount 
+      FROM donation 
+      WHERE status != ? 
+      AND areaId = ?;
+    `;
+    const values = [
+      "COLLECTED",
+      areaId,
+      "COLLECTED",
+      areaId,
+      "COLLECTED",
+      areaId,
+    ];
+    return this.getQuery(sql, values);
+  }
+
+  async getAreaDailyStats({ areaId }) {
+    const todayDate = new Date();
+    const tomorrowDate = new Date();
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+
+    const today = todayDate.toISOString().split("T")[0];
+    const tomorrow = tomorrowDate.toISOString().split("T")[0];
+    console.log(tomorrow);
+
+    const sql = `
+      SELECT COUNT(id) 
+      AS collectionCount 
+      FROM donation 
+      WHERE status = ? 
+      AND areaId = ?
+      AND collectedAt BETWEEN ? AND ?;
+      
+      SELECT SUM(amount) 
+      AS totalCashFlow 
+      FROM donation 
+      WHERE status = ? 
+      AND areaId = ?
+      AND collectedAt BETWEEN ? AND ?;
+      
+      SELECT COUNT(id) 
+      AS requestCount 
+      FROM donation 
+      WHERE status != ? 
+      AND areaId = ?
+      AND requestedAt BETWEEN ? AND ?;
+    `;
+    const values = [
+      "COLLECTED",
+      areaId,
+      today,
+      tomorrow,
+      "COLLECTED",
+      areaId,
+      today,
+      tomorrow,
+      "REQUESTED",
+      areaId,
+      today,
+      tomorrow,
+    ];
+    return this.getQuery(sql, values);
+  }
+
+  async getAreaRequestedDonations({ areaId, search }) {
+    const sql = `
+      SELECT * FROM requested_donations 
+      WHERE areaId = ? 
+      AND (
+        CONCAT(firstName, " ", lastName) 
+          LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+        OR email LIKE "%${search}%"
+      )
+      AND active = ?
+      ORDER BY createdAt DESC
+    `;
+    const values = [areaId, true];
+    return this.getQuery(sql, values);
+  }
+
+  async getAreaRequestStats({ areaId }) {
+    const sql = `
+      SELECT 
+        COUNT(id) AS requestCount, 
+        SUM(amount) AS requestTotal 
+      FROM requested_donations 
+      WHERE areaId = ? 
+      AND (
+        CONCAT(firstName, " ", lastName) 
+          LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+        OR email LIKE "%${search}%"
+      )
+      AND active = ?
+    `;
+    const values = [areaId, true];
     return this.getQuery(sql, values);
   }
 }
 
 class DBSingleton {
   static db;
-
   /**
    * Get the reference to single DB client instance
    * @returns {DB}

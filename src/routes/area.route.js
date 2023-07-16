@@ -4,9 +4,14 @@ import changeAreaName, {
   changeAreaNameValidators,
 } from "@/controllers/change-area-name";
 import createArea, { createAreaValidators } from "@/controllers/create-area";
+import getAreaDailyStats from "@/controllers/get-area-daily-stats";
+import getAreaRequestStats from "@/controllers/get-area-request-stats";
+import getAreaRequestedDonations from "@/controllers/get-area-requested-donations";
+import getAreaStats from "@/controllers/get-area-stats";
 import getAreas from "@/controllers/get-areas";
 import unassignAreaFromChairperson from "@/controllers/unassign-area-from-chairperson";
 import authorizeRole from "@/middleware/authorize-role";
+import hasAreaAssigned from "@/middleware/has-area-assigned";
 import validateBody from "@/middleware/validate-body";
 import verifyLogin from "@/middleware/verify-login";
 import { Router } from "express";
@@ -45,6 +50,46 @@ areaRouter.patch(
   verifyLogin,
   authorizeRole([roles.GENERAL_SECRETARY]),
   unassignAreaFromChairperson
+);
+
+areaRouter.get(
+  "/stats",
+  verifyLogin,
+  authorizeRole([roles.CHAIRPERSON]),
+  hasAreaAssigned,
+  getAreaStats
+);
+
+areaRouter.get(
+  "/stats",
+  verifyLogin,
+  authorizeRole([roles.CHAIRPERSON]),
+  hasAreaAssigned,
+  getAreaStats
+);
+
+areaRouter.get(
+  "/daily-stats",
+  verifyLogin,
+  authorizeRole([roles.CHAIRPERSON]),
+  hasAreaAssigned,
+  getAreaDailyStats
+);
+
+areaRouter.get(
+  "/request-stats",
+  verifyLogin,
+  authorizeRole([roles.CHAIRPERSON]),
+  hasAreaAssigned,
+  getAreaRequestStats
+);
+
+areaRouter.get(
+  "/requested-donations",
+  verifyLogin,
+  authorizeRole([roles.CHAIRPERSON]),
+  hasAreaAssigned,
+  getAreaRequestedDonations
 );
 
 export default areaRouter;
