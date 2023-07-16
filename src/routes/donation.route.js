@@ -11,15 +11,14 @@ import addPendingDonationRegistered, {
 import addPendingDonationUnregistered, {
   addPendingDonationUnregisteredValidator,
 } from "@/controllers/add-pending-donation-unregistered";
-import approveDonationRequest, {
-  approveDonationRequestValidator,
-} from "@/controllers/approve-donation-request";
+import approveDonationRequest from "@/controllers/approve-donation-request";
 import collectAcceptDonation, {
   collectAcceptDonationValidator,
 } from "@/controllers/collect-accepted-donation";
 import donorDonationRequest, {
   donorDonationRequestValidator,
 } from "@/controllers/donor-donation-request";
+import getDonationInfo from "@/controllers/get-donation-info";
 import getDonorRequests from "@/controllers/get-donor-requests";
 import getRequestedDonations from "@/controllers/get-requested-donations";
 import authorizeRole from "@/middleware/authorize-role";
@@ -68,9 +67,9 @@ donationRouter.post(
 
 // Chairperson
 donationRouter.patch(
-  "/approve",
-  ...approveDonationRequestValidator,
-  validateBody,
+  "/approve/:donationId",
+  verifyLogin,
+  authorizeRole([roles.CHAIRPERSON]),
   approveDonationRequest
 );
 
@@ -95,5 +94,7 @@ donationRouter.post(
   validateBody,
   addNewCollection
 );
+
+donationRouter.get("/:donationId", verifyLogin, getDonationInfo);
 
 export default donationRouter;

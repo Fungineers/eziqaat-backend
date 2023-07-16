@@ -402,7 +402,7 @@ class DB {
       areaId,
       today,
       tomorrow,
-      "REQUESTED",
+      "COLLECTED",
       areaId,
       today,
       tomorrow,
@@ -445,6 +445,95 @@ class DB {
       AND active = ?
     `;
     const values = [areaId, true];
+    return this.getQuery(sql, values);
+  }
+
+  async getAreaPendingDonations({ areaId, search }) {
+    const sql = `
+      SELECT * FROM pending_donations 
+      WHERE areaId = ? 
+      AND (
+        CONCAT(firstName, " ", lastName) 
+          LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+        OR email LIKE "%${search}%"
+      )
+      AND active = ?
+      ORDER BY createdAt DESC
+    `;
+    const values = [areaId, true];
+    return this.getQuery(sql, values);
+  }
+
+  async getAreaPendingStats({ areaId }) {
+    const sql = `
+      SELECT 
+        COUNT(id) AS pendingCount, 
+        SUM(amount) AS pendingTotal 
+      FROM pending_donations 
+      WHERE areaId = ? 
+      AND (
+        CONCAT(firstName, " ", lastName) 
+          LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+        OR email LIKE "%${search}%"
+      )
+      AND active = ?
+    `;
+    const values = [areaId, true];
+    return this.getQuery(sql, values);
+  }
+
+  async getDonationInfo({ donationId }) {
+    const sql = `
+      SELECT *
+      FROM donation_info
+      WHERE id = ?
+      LIMIT 1
+    `;
+    const values = [donationId];
+    return this.getQuery(sql, values);
+  }
+
+  async getWorkerStats({ workerId, areaId }) {
+    const sql = `
+      SELECT COUNT(id) 
+      AS collectionCount 
+      FROM donation 
+      WHERE status = ? 
+      AND workerId = ?;
+      
+      SELECT SUM(amount) 
+      AS totalCashFlow 
+      FROM donation 
+      WHERE status = ? 
+      AND workerId = ?;
+      
+      SELECT COUNT(id) 
+      AS inProgress 
+      FROM donation 
+      WHERE status != ? 
+      AND workerId = ?;
+
+      SELECT COUNT(id) 
+      AS pending 
+      FROM donation 
+      WHERE status = ? 
+      AND areaId = ?;
+    `;
+
+    const values = [
+      "COLLECTED",
+      workerId,
+      "COLLECTED",
+      workerId,
+      "COLLECTED",
+      workerId,
+      "PENDING",
+      areaId,
+    ];
     return this.getQuery(sql, values);
   }
 }

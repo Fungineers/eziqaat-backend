@@ -5,6 +5,7 @@ import createWorker, {
 import getActiveWorkersByArea from "@/controllers/get-active-workers-by-area";
 import getInActiveWorkersByArea from "@/controllers/get-inactive-workers-by-area";
 import getWorkerById from "@/controllers/get-worker-by-id";
+import getWorkerStats from "@/controllers/get-worker-stats";
 import authorizeRole from "@/middleware/authorize-role";
 import validateBody from "@/middleware/validate-body";
 import { Router } from "express";
@@ -18,6 +19,8 @@ workerRouter.post(
   validateBody,
   createWorker
 );
+
+workerRouter.get("/stats", authorizeRole([roles.WORKER]), getWorkerStats);
 
 workerRouter.get(
   "/",
