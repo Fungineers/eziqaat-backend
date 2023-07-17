@@ -8,7 +8,7 @@ const getActiveWorkersByArea = (req, res) => {
     return res.status(403).json({ message: "You don't have an area assigned" });
   }
 
-  const search = s || "";
+  const search = (s || "").toLowerCase().trim();
 
   const { id: areaId } = area;
 

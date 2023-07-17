@@ -105,7 +105,7 @@ areaRouter.get(
 areaRouter.get(
   "/pending-donations",
   verifyLogin,
-  authorizeRole([roles.CHAIRPERSON]),
+  authorizeRole([roles.CHAIRPERSON, roles.WORKER]),
   hasAreaAssigned,
   getAreaPendingDonations
 );

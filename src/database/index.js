@@ -466,6 +466,42 @@ class DB {
     return this.getQuery(sql, values);
   }
 
+  async getWorkerAcceptedDonations({ workerId, search }) {
+    const sql = `
+      SELECT * FROM accepted_donations 
+      WHERE workerId = ? 
+      AND (
+        CONCAT(firstName, " ", lastName) 
+          LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+        OR email LIKE "%${search}%"
+      )
+      AND active = ?
+      ORDER BY createdAt DESC
+    `;
+    const values = [workerId, true];
+    return this.getQuery(sql, values);
+  }
+
+  async getWorkerCollectedDonations({ workerId, search }) {
+    const sql = `
+      SELECT * FROM collected_donations 
+      WHERE workerId = ? 
+      AND (
+        CONCAT(firstName, " ", lastName) 
+          LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+        OR email LIKE "%${search}%"
+      )
+      AND active = ?
+      ORDER BY createdAt DESC
+    `;
+    const values = [workerId, true];
+    return this.getQuery(sql, values);
+  }
+
   async getAreaPendingStats({ areaId }) {
     const sql = `
       SELECT 
@@ -534,6 +570,22 @@ class DB {
       "PENDING",
       areaId,
     ];
+    return this.getQuery(sql, values);
+  }
+
+  async searchUniqueDonor({ search }) {
+    const sql = `
+      SELECT * 
+      FROM user_data
+      WHERE (
+        LOWER(email) LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+      )
+      AND role = ?
+      LIMIT 1;
+    `;
+    const values = [roles.DONOR];
     return this.getQuery(sql, values);
   }
 }

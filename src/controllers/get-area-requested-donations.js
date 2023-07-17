@@ -4,7 +4,7 @@ const getAreaRequestedDonations = (req, res) => {
   const { area } = req.user;
   const { s } = req.query;
 
-  const search = s || "";
+  const search = (s || "").toLowerCase().trim();
 
   const { id: areaId } = area;
 

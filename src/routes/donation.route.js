@@ -12,9 +12,7 @@ import addPendingDonationUnregistered, {
   addPendingDonationUnregisteredValidator,
 } from "@/controllers/add-pending-donation-unregistered";
 import approveDonationRequest from "@/controllers/approve-donation-request";
-import collectAcceptDonation, {
-  collectAcceptDonationValidator,
-} from "@/controllers/collect-accepted-donation";
+import collectAcceptedDonation from "@/controllers/collect-accepted-donation";
 import donorDonationRequest, {
   donorDonationRequestValidator,
 } from "@/controllers/donor-donation-request";
@@ -75,17 +73,15 @@ donationRouter.patch(
 
 // Worker
 donationRouter.patch(
-  "/accept",
-  ...acceptPendingDonationValidator,
-  validateBody,
+  "/accept/:donationId",
+  authorizeRole([roles.WORKER]),
   acceptPendingDonation
 );
 
 donationRouter.patch(
-  "/collect",
-  ...collectAcceptDonationValidator,
-  validateBody,
-  collectAcceptDonation
+  "/collect/:donationId",
+  authorizeRole([roles.WORKER]),
+  collectAcceptedDonation
 );
 
 donationRouter.post(
