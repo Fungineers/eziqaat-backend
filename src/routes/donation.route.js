@@ -1,7 +1,5 @@
 import { roles } from "@/constants";
-import acceptPendingDonation, {
-  acceptPendingDonationValidator,
-} from "@/controllers/accept-pending-donation";
+import acceptPendingDonation from "@/controllers/accept-pending-donation";
 import addNewCollection, {
   addNewCollectionValidator,
 } from "@/controllers/add-new-collection";
@@ -86,6 +84,8 @@ donationRouter.patch(
 
 donationRouter.post(
   "/new",
+  verifyLogin,
+  authorizeRole([roles.WORKER]),
   ...addNewCollectionValidator,
   validateBody,
   addNewCollection

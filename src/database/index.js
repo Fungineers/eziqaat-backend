@@ -223,9 +223,9 @@ class DB {
     return this.getQuery(sql, values);
   }
 
-  async addNewCollection({ donorId, areaId, amount, address }) {
-    const sql = `CALL ADD_NEW_COLLECTION(?, ?, ?, ?)`;
-    const values = [donorId, areaId, amount, address];
+  async addNewCollection({ donorId, areaId, workerId, amount, address }) {
+    const sql = `CALL ADD_NEW_COLLECTION(?, ?, ?, ?, ?)`;
+    const values = [donorId, areaId, workerId, amount, address];
     return this.getQuery(sql, values);
   }
 
@@ -325,7 +325,7 @@ class DB {
       donorId,
       "COLLECTED",
       donorId,
-      "REQUESTED",
+      "COLLECTED",
       donorId,
     ];
     return this.getQuery(sql, values);

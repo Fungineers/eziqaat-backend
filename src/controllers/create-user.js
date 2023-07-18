@@ -15,6 +15,8 @@ export const authorizeCreateUser = (req, res, next) => {
       (creatorRole === roles.CHAIRPERSON && userRole === roles.WORKER)
     ) {
       next();
+    } else if (userRole === roles.DONOR && creatorRole === roles.WORKER) {
+      next();
     } else {
       return res.status(401).json({ message: "Access Denied" });
     }
