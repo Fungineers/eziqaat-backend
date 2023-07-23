@@ -1,4 +1,5 @@
 import db from "@/database";
+import { sendSMS } from "@/sms";
 import generateRandomPassword from "@/utils/generate-random-password";
 import { body } from "express-validator";
 

@@ -3,14 +3,26 @@ import db from "@/database";
 const getWorkerById = (req, res) => {
   const { id: workerId } = req.params;
 
-  db.getWorkerDetails({ id: workerId })
+  db.getWorkerDetails({ workerId })
     .then((result) => {
+      console.log(result[0]);
       try {
-        const data = result[0][0];
-        if (data) {
+        const [
+          [workerDetails],
+          [{ collectionCount }],
+          [{ totalCashFlow }],
+          [{ inProgress }],
+        ] = result[0];
+
+        if (workerDetails) {
           res.status(200).json({
-            message: "Worker found succesfully",
-            workerDetails: { data },
+            message: "Worker details retrieved sucessfully",
+            data: {
+              workerDetails,
+              collectionCount: +collectionCount,
+              totalCashFlow: +totalCashFlow,
+              inProgress: +inProgress,
+            },
           });
         } else {
           res.status(404).json({ message: "Worker not found" });

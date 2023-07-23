@@ -1,5 +1,6 @@
 import { regexps, roles } from "@/constants";
 import db from "@/database";
+import { composeAccountCreationSMS, sendSMS } from "@/sms";
 import generateRandomOTP from "@/utils/generate-random-otp";
 import generateRandomPassword from "@/utils/generate-random-password";
 import { body } from "express-validator";
@@ -81,6 +82,10 @@ const createUser = (req, res) => {
         res.status(201).json({
           message: "User created sucessfully",
           user,
+        });
+        sendSMS({
+          phone,
+          message: composeAccountCreationSMS({ firstName, password, role }),
         });
       } catch (error) {
         console.log(error);

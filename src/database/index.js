@@ -281,8 +281,38 @@ class DB {
 
   async getWorkerDetails({ workerId }) {
     const sql = `
+      SELECT * 
+      FROM user_data
+      WHERE id = ?;
       
+      SELECT COUNT(id) 
+      AS collectionCount 
+      FROM donation 
+      WHERE status = ? 
+      AND workerId = ?;
+      
+      SELECT SUM(amount) 
+      AS totalCashFlow 
+      FROM donation 
+      WHERE status = ? 
+      AND workerId = ?;
+      
+      SELECT COUNT(id) 
+      AS inProgress 
+      FROM donation 
+      WHERE status != ? 
+      AND workerId = ?;
     `;
+    const values = [
+      workerId,
+      "COLLECTED",
+      workerId,
+      "COLLECTED",
+      workerId,
+      "COLLECTED",
+      workerId,
+    ];
+    return this.getQuery(sql, values);
   }
 
   async getRequestedDonations({ areaId }) {
