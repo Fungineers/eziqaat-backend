@@ -8,10 +8,10 @@ const getWorkerCollectedDonations = (req, res) => {
 
   db.getWorkerCollectedDonations({ workerId, search })
     .then((result) => {
-      const collectedDonations = result[0];
+      const donations = result[0];
       res.status(200).json({
         message: "Collected records found successfully",
-        collectedDonations,
+        donations,
       });
     })
     .catch((err) => {

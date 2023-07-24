@@ -4,6 +4,8 @@ import changeAreaName, {
   changeAreaNameValidators,
 } from "@/controllers/change-area-name";
 import createArea, { createAreaValidators } from "@/controllers/create-area";
+import getAreaAcceptedDonations from "@/controllers/get-area-accepted-donations";
+import getAreaCollectedDonations from "@/controllers/get-area-collected-donations";
 import getAreaDailyStats from "@/controllers/get-area-daily-stats";
 import getAreaPendingDonations from "@/controllers/get-area-pending-donations";
 import getAreaPendingStats from "@/controllers/get-area-pending-stats";
@@ -108,6 +110,22 @@ areaRouter.get(
   authorizeRole([roles.CHAIRPERSON, roles.WORKER]),
   hasAreaAssigned,
   getAreaPendingDonations
+);
+
+areaRouter.get(
+  "/accepted-donations",
+  verifyLogin,
+  authorizeRole([roles.CHAIRPERSON]),
+  hasAreaAssigned,
+  getAreaAcceptedDonations
+);
+
+areaRouter.get(
+  "/collected-donations",
+  verifyLogin,
+  authorizeRole([roles.CHAIRPERSON]),
+  hasAreaAssigned,
+  getAreaCollectedDonations
 );
 
 export default areaRouter;

@@ -15,6 +15,7 @@ import donorDonationRequest, {
   donorDonationRequestValidator,
 } from "@/controllers/donor-donation-request";
 import getDonationInfo from "@/controllers/get-donation-info";
+import getDonorHistory from "@/controllers/get-donor-history";
 import getDonorRequests from "@/controllers/get-donor-requests";
 import getRequestedDonations from "@/controllers/get-requested-donations";
 import authorizeRole from "@/middleware/authorize-role";
@@ -45,6 +46,13 @@ donationRouter.get(
   verifyLogin,
   authorizeRole([roles.DONOR]),
   getDonorRequests
+);
+
+donationRouter.get(
+  "/donor-history",
+  verifyLogin,
+  authorizeRole([roles.DONOR]),
+  getDonorHistory
 );
 
 donationRouter.post(

@@ -205,9 +205,15 @@ class DB {
     return this.getQuery(sql, values);
   }
 
-  async addPendingDonationUnregistered({ refName, address, phone, amount }) {
-    const sql = `CALL ADD_PENDING_DONATION_UNREGISTERED(?, ?, ?, ?)`;
-    const values = [refName, address, phone, amount];
+  async addPendingDonationUnregistered({
+    refName,
+    address,
+    refPhone,
+    amount,
+    areaId,
+  }) {
+    const sql = `CALL ADD_PENDING_DONATION_UNREGISTERED(?, ?, ?, ?, ?)`;
+    const values = [refName, refPhone, address, amount, areaId];
     return this.getQuery(sql, values);
   }
 
@@ -252,13 +258,15 @@ class DB {
       WHERE areaId = ? 
       AND active = ? 
       AND role = ?
-      AND (
+      AND ((
+        '${search}' IS NULL OR '${search}' = ''
+      ) OR (
         CONCAT(firstName, " ", lastName) 
           LIKE "%${search}%"
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
-      )
+      ))
       ORDER BY 
         active DESC, 
         createdAt ASC;
@@ -338,6 +346,15 @@ class DB {
   async getDonorRequests({ donorId }) {
     const sql = `
       SELECT * FROM donor_requests
+      WHERE donorId = ?
+    `;
+    const values = [donorId];
+    return this.getQuery(sql, values);
+  }
+
+  async getDonorHistory({ donorId }) {
+    const sql = `
+      SELECT * FROM donor_history
       WHERE donorId = ?
     `;
     const values = [donorId];
@@ -445,16 +462,17 @@ class DB {
       SELECT * FROM requested_donations 
       WHERE areaId = ? 
       AND (
+        '${search}' IS NULL OR '${search}' = ''
+      ) OR (
         CONCAT(firstName, " ", lastName) 
           LIKE "%${search}%"
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
       )
-      AND active = ?
       ORDER BY createdAt DESC
     `;
-    const values = [areaId, true];
+    const values = [areaId];
     return this.getQuery(sql, values);
   }
 
@@ -466,6 +484,8 @@ class DB {
       FROM requested_donations 
       WHERE areaId = ? 
       AND (
+        '${search}' IS NULL OR '${search}' = ''
+      ) OR (
         CONCAT(firstName, " ", lastName) 
           LIKE "%${search}%"
         OR phone LIKE "%${search}%"
@@ -483,16 +503,57 @@ class DB {
       SELECT * FROM pending_donations 
       WHERE areaId = ? 
       AND (
+        '${search}' IS NULL OR '${search}' = ''
+      ) OR (
         CONCAT(firstName, " ", lastName) 
           LIKE "%${search}%"
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
       )
-      AND active = ?
       ORDER BY createdAt DESC
     `;
-    const values = [areaId, true];
+    const values = [areaId];
+    return this.getQuery(sql, values);
+  }
+
+  async getAreaAcceptedDonations({ areaId, search }) {
+    const sql = `
+      SELECT * FROM accepted_donations 
+      WHERE areaId = ? 
+      AND (
+        '${search}' IS NULL OR '${search}' = ''
+      ) OR (
+        CONCAT(firstName, " ", lastName) 
+          LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+        OR email LIKE "%${search}%"
+      )
+      
+      ORDER BY createdAt DESC
+    `;
+    const values = [areaId];
+    return this.getQuery(sql, values);
+  }
+
+  async getAreaCollectedDonations({ areaId, search }) {
+    const sql = `
+      SELECT * FROM collected_donations 
+      WHERE areaId = ? 
+      AND (
+        '${search}' IS NULL OR '${search}' = ''
+      ) OR (
+        CONCAT(firstName, " ", lastName) 
+          LIKE "%${search}%"
+        OR phone LIKE "%${search}%"
+        OR cnic LIKE "%${search}%"
+        OR email LIKE "%${search}%"
+      )
+      
+      ORDER BY createdAt DESC
+    `;
+    const values = [areaId];
     return this.getQuery(sql, values);
   }
 
@@ -501,13 +562,15 @@ class DB {
       SELECT * FROM accepted_donations 
       WHERE workerId = ? 
       AND (
+        '${search}' IS NULL OR '${search}' = ''
+      ) OR (
         CONCAT(firstName, " ", lastName) 
           LIKE "%${search}%"
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
       )
-      AND active = ?
+      
       ORDER BY createdAt DESC
     `;
     const values = [workerId, true];
@@ -519,13 +582,15 @@ class DB {
       SELECT * FROM collected_donations 
       WHERE workerId = ? 
       AND (
+        '${search}' IS NULL OR '${search}' = ''
+      ) OR (
         CONCAT(firstName, " ", lastName) 
           LIKE "%${search}%"
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
       )
-      AND active = ?
+      
       ORDER BY createdAt DESC
     `;
     const values = [workerId, true];
@@ -540,13 +605,15 @@ class DB {
       FROM pending_donations 
       WHERE areaId = ? 
       AND (
+        '${search}' IS NULL OR '${search}' = ''
+      ) OR (
         CONCAT(firstName, " ", lastName) 
           LIKE "%${search}%"
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
       )
-      AND active = ?
+      
     `;
     const values = [areaId, true];
     return this.getQuery(sql, values);

@@ -10,10 +10,10 @@ const getAreaPendingDonations = (req, res) => {
 
   db.getAreaPendingDonations({ areaId, search })
     .then((result) => {
-      const pendingDonations = result[0];
+      const donations = result[0];
       res.status(200).json({
         message: "Pending records found successfully",
-        pendingDonations,
+        donations,
       });
     })
     .catch((err) => {

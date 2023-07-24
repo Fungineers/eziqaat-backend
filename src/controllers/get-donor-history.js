@@ -1,9 +1,9 @@
 const { default: db } = require("@/database");
 
-const getDonorRequests = (req, res) => {
+const getDonorHistory = (req, res) => {
   const { id: donorId } = req.user;
 
-  db.getDonorRequests({ donorId })
+  db.getDonorHistory({ donorId })
     .then((result) => {
       const donations = result[0];
       res
@@ -15,4 +15,4 @@ const getDonorRequests = (req, res) => {
     });
 };
 
-export default getDonorRequests;
+export default getDonorHistory;

@@ -1,6 +1,6 @@
 import db from "@/database";
 
-const getAreaRequestedDonations = (req, res) => {
+const getAreaCollectedDonations = (req, res) => {
   const { area } = req.user;
   const { s } = req.query;
 
@@ -8,7 +8,7 @@ const getAreaRequestedDonations = (req, res) => {
 
   const { id: areaId } = area;
 
-  db.getAreaRequestedDonations({ areaId, search })
+  db.getAreaCollectedDonations({ areaId, search })
     .then((result) => {
       const donations = result[0];
       res
@@ -20,4 +20,4 @@ const getAreaRequestedDonations = (req, res) => {
     });
 };
 
-export default getAreaRequestedDonations;
+export default getAreaCollectedDonations;

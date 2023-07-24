@@ -32,8 +32,6 @@ const changePassword = (req, res) => {
     .then((results) => {
       const { affectedRows } = results[0];
 
-      console.log(results);
-
       if (affectedRows === 0) {
         return res.status(403).json({
           message:

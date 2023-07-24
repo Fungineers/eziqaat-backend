@@ -20,8 +20,6 @@ const addNewCollection = (req, res) => {
 
   const { address, amount, donorId } = req.body;
 
-  console.log({ donorId, areaId, workerId, address, amount });
-
   db.addNewCollection({ donorId, areaId, workerId, address, amount })
     .then((results) => {
       const { affectedRows } = results[0];
