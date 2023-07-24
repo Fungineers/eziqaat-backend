@@ -258,7 +258,7 @@ class DB {
       WHERE areaId = ? 
       AND active = ? 
       AND role = ?
-      AND ((
+      AND (((
         '${search}' IS NULL OR '${search}' = ''
       ) OR (
         CONCAT(firstName, " ", lastName) 
@@ -266,7 +266,7 @@ class DB {
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
-      ))
+      )))
       ORDER BY 
         active DESC, 
         createdAt ASC;
@@ -461,7 +461,7 @@ class DB {
     const sql = `
       SELECT * FROM requested_donations 
       WHERE areaId = ? 
-      AND (
+      AND (((
         '${search}' IS NULL OR '${search}' = ''
       ) OR (
         CONCAT(firstName, " ", lastName) 
@@ -469,7 +469,7 @@ class DB {
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
-      )
+      )))
       ORDER BY createdAt DESC
     `;
     const values = [areaId];
@@ -483,7 +483,7 @@ class DB {
         SUM(amount) AS requestTotal 
       FROM requested_donations 
       WHERE areaId = ? 
-      AND (
+      AND (((
         '${search}' IS NULL OR '${search}' = ''
       ) OR (
         CONCAT(firstName, " ", lastName) 
@@ -491,7 +491,7 @@ class DB {
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
-      )
+      )))
       AND active = ?
     `;
     const values = [areaId, true];
@@ -502,7 +502,7 @@ class DB {
     const sql = `
       SELECT * FROM pending_donations 
       WHERE areaId = ? 
-      AND (
+      AND (((
         '${search}' IS NULL OR '${search}' = ''
       ) OR (
         CONCAT(firstName, " ", lastName) 
@@ -510,7 +510,7 @@ class DB {
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
-      )
+      )))
       ORDER BY createdAt DESC
     `;
     const values = [areaId];
@@ -521,7 +521,7 @@ class DB {
     const sql = `
       SELECT * FROM accepted_donations 
       WHERE areaId = ? 
-      AND (
+      AND ((
         '${search}' IS NULL OR '${search}' = ''
       ) OR (
         CONCAT(firstName, " ", lastName) 
@@ -529,8 +529,7 @@ class DB {
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
-      )
-      
+      ))
       ORDER BY createdAt DESC
     `;
     const values = [areaId];
@@ -541,7 +540,7 @@ class DB {
     const sql = `
       SELECT * FROM collected_donations 
       WHERE areaId = ? 
-      AND (
+      AND ((
         '${search}' IS NULL OR '${search}' = ''
       ) OR (
         CONCAT(firstName, " ", lastName) 
@@ -549,7 +548,7 @@ class DB {
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
-      )
+      ))
       
       ORDER BY createdAt DESC
     `;
@@ -562,15 +561,12 @@ class DB {
       SELECT * FROM accepted_donations 
       WHERE workerId = ? 
       AND (
-        '${search}' IS NULL OR '${search}' = ''
-      ) OR (
         CONCAT(firstName, " ", lastName) 
           LIKE "%${search}%"
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
       )
-      
       ORDER BY createdAt DESC
     `;
     const values = [workerId, true];
@@ -581,7 +577,7 @@ class DB {
     const sql = `
       SELECT * FROM collected_donations 
       WHERE workerId = ? 
-      AND (
+      AND (((
         '${search}' IS NULL OR '${search}' = ''
       ) OR (
         CONCAT(firstName, " ", lastName) 
@@ -589,7 +585,7 @@ class DB {
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
-      )
+      )))
       
       ORDER BY createdAt DESC
     `;
@@ -604,7 +600,7 @@ class DB {
         SUM(amount) AS pendingTotal 
       FROM pending_donations 
       WHERE areaId = ? 
-      AND (
+      AND (((
         '${search}' IS NULL OR '${search}' = ''
       ) OR (
         CONCAT(firstName, " ", lastName) 
@@ -612,7 +608,7 @@ class DB {
         OR phone LIKE "%${search}%"
         OR cnic LIKE "%${search}%"
         OR email LIKE "%${search}%"
-      )
+      )))
       
     `;
     const values = [areaId, true];
