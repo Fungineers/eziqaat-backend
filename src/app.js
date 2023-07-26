@@ -17,7 +17,7 @@ app.use(cors({ exposedHeaders: ["Authorization"] }));
 app.use(json());
 app.use(urlencoded({ extended: false }));
 
-const port = getEnv("port") || 3001;
+const port = getEnv("PORT") || 3001;
 
 app.all("*", authenticateUser, getArea);
 
