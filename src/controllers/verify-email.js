@@ -1,7 +1,6 @@
 import db from "@/database";
-
-const { regexps } = require("@/constants");
-const { body } = require("express-validator");
+import { regexps } from "@/constants";
+import { body } from "express-validator";
 
 export const verifyEmailValidators = [
   body("emailOtp")

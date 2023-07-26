@@ -19,6 +19,8 @@ import getDonorHistory from "@/controllers/get-donor-history";
 import getDonorRequests from "@/controllers/get-donor-requests";
 import getRequestedDonations from "@/controllers/get-requested-donations";
 import authorizeRole from "@/middleware/authorize-role";
+import getUserFromCredential from "@/middleware/get-user-from-credential";
+import useDonationInfo from "@/middleware/use-donation-info";
 import validateBody from "@/middleware/validate-body";
 import verifyLogin from "@/middleware/verify-login";
 import { Router } from "express";
@@ -87,6 +89,9 @@ donationRouter.patch(
 donationRouter.patch(
   "/collect/:donationId",
   authorizeRole([roles.WORKER]),
+  (req, res, next) => {
+    useDonationInfo(req.params.donationId)(req, res, next);
+  },
   collectAcceptedDonation
 );
 
@@ -96,6 +101,9 @@ donationRouter.post(
   authorizeRole([roles.WORKER]),
   ...addNewCollectionValidator,
   validateBody,
+  (req, res, next) => {
+    getUserFromCredential(req.body.donorId, "donor")(req, res, next);
+  },
   addNewCollection
 );
 

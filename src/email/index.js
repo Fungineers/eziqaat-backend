@@ -1,3 +1,4 @@
+import getEnv from "@/config/get-env";
 import { createTransport } from "nodemailer";
 import hbs from "nodemailer-express-handlebars";
 import path from "path";
@@ -6,7 +7,7 @@ const transporter = createTransport({
   service: "gmail",
   auth: {
     user: "team.eziqaat@gmail.com",
-    pass: "vdwawrjwbvpyanqg",
+    pass: getEnv("NODEMAILER_PASS"),
   },
 });
 

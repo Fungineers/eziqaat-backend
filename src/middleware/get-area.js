@@ -1,4 +1,4 @@
-import getUserArea from "@/utils/getUserArea";
+import getUserArea from "@/utils/get-user-area";
 
 const getArea = (req, res, next) => {
   const { user } = req;

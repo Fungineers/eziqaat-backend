@@ -13,7 +13,7 @@ const resetPassword = (req, res) => {
       message: "User not found",
     });
   }
-  const { phone, email } = req.user;
+  const { phone } = req.user;
   const { credential } = req.body;
   const password = generateRandomPassword();
   console.log(password);
@@ -26,7 +26,7 @@ const resetPassword = (req, res) => {
           message: "User not found",
         });
       }
-      // sendSMS({ phone, message: composeResetPasswordSMS({ password }) });
+      sendSMS({ phone, message: composeResetPasswordSMS({ password }) });
       res.status(200).json({ message: "Password reset successfully" });
     })
     .catch((error) => {

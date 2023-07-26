@@ -1,6 +1,8 @@
 import db from "@/database";
+import { composeCollectionSMS, sendSMS } from "@/sms";
 
 const collectAcceptedDonation = (req, res) => {
+  const donationInfo = req.donationInfo;
   const { donationId } = req.params;
   const { id: workerId } = req.user;
 
@@ -10,6 +12,21 @@ const collectAcceptedDonation = (req, res) => {
       if (affectedRows === 0) {
         return res.status(404).json({
           message: "Request record not found",
+        });
+      }
+      const phone = donationInfo.donorPhone || donationInfo.refPhone;
+      if (phone) {
+        sendSMS({
+          phone,
+          message: composeCollectionSMS({
+            id: donationInfo.id,
+            amount: donationInfo.amount,
+            address: donationInfo.address,
+            workerName: donationInfo.workerName,
+            workerId: donationInfo.workerId,
+            areaName: donationInfo.areaName,
+            chairpersonPhone: donationInfo.chairpersonPhone,
+          }),
         });
       }
       res.status(200).json({ message: "Collection reported successfully" });

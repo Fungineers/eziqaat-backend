@@ -119,11 +119,12 @@ class DB {
     const sql = `
       SELECT * 
       FROM user_data
-      WHERE phone = ? 
+      WHERE id = ?
+      OR phone = ? 
       OR LOWER(email) = LOWER(?)
       OR cnic = ?
     `;
-    const values = [credential, credential, credential];
+    const values = [credential, credential, credential, credential];
     return this.getQuery(sql, values);
   }
 
@@ -266,7 +267,7 @@ class DB {
   async getWorkerArea({ areaId }) {
     const sql = `
       SELECT * 
-      FROM area 
+      FROM area_with_chairperson
       WHERE id = ?
     `;
     const values = [areaId];

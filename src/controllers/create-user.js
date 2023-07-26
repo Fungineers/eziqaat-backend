@@ -85,10 +85,10 @@ const createUser = (req, res) => {
           message: "User created sucessfully",
           user,
         });
-        // sendSMS({
-        //   phone,
-        //   message: composeAccountCreationSMS({ firstName, password, role }),
-        // });
+        sendSMS({
+          phone,
+          message: composeAccountCreationSMS({ firstName, password, role }),
+        });
         if (email) {
           sendRegisterEmail({
             to: email,

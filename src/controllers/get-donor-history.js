@@ -1,4 +1,4 @@
-const { default: db } = require("@/database");
+import db from "@/database";
 
 const getDonorHistory = (req, res) => {
   const { id: donorId } = req.user;
