@@ -1,6 +1,8 @@
 import db from "@/database";
+import { sendResetEmail } from "@/email";
 import generateRandomOTP from "@/utils/generate-random-otp";
 import { body } from "express-validator";
+import moment from "moment";
 
 export const changeEmailValidators = [
   body("email")
@@ -12,7 +14,7 @@ export const changeEmailValidators = [
 ];
 
 const changeEmail = (req, res) => {
-  const { id } = req.user;
+  const { id, firstName } = req.user;
   const { email } = req.body;
 
   const emailOtp = generateRandomOTP();
@@ -25,6 +27,15 @@ const changeEmail = (req, res) => {
           message: "Please choose a different new email",
         });
       }
+      sendResetEmail({
+        to: email,
+        context: {
+          email,
+          name: firstName,
+          time: moment(new Date()).format("LLL"),
+          otp: emailOtp,
+        },
+      });
       res.status(200).json({ message: "Email changed" });
     })
     .catch((err) => {

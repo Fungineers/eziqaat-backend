@@ -115,9 +115,31 @@ class DB {
     return this.getQuery(sql, values);
   }
 
+  async getUserFromCredential({ credential }) {
+    const sql = `
+      SELECT * 
+      FROM user_data
+      WHERE phone = ? 
+      OR LOWER(email) = LOWER(?)
+      OR cnic = ?
+    `;
+    const values = [credential, credential, credential];
+    return this.getQuery(sql, values);
+  }
+
   async getUserById({ id }) {
     const sql = `SELECT * FROM user_data WHERE id = ?`;
     const values = [id];
+    return this.getQuery(sql, values);
+  }
+
+  async requestOtp({ id, emailOtp }) {
+    const sql = `
+      UPDATE user
+      SET emailOtp = ?
+      WHERE id = ?
+    `;
+    const values = [emailOtp, id];
     return this.getQuery(sql, values);
   }
 

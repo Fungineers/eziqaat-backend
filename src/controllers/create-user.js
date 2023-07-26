@@ -1,9 +1,11 @@
 import { regexps, roles } from "@/constants";
 import db from "@/database";
+import { sendRegisterEmail } from "@/email";
 import { composeAccountCreationSMS, sendSMS } from "@/sms";
 import generateRandomOTP from "@/utils/generate-random-otp";
 import generateRandomPassword from "@/utils/generate-random-password";
 import { body } from "express-validator";
+import moment from "moment";
 
 export const authorizeCreateUser = (req, res, next) => {
   const { user } = req;
@@ -83,10 +85,21 @@ const createUser = (req, res) => {
           message: "User created sucessfully",
           user,
         });
-        sendSMS({
-          phone,
-          message: composeAccountCreationSMS({ firstName, password, role }),
-        });
+        // sendSMS({
+        //   phone,
+        //   message: composeAccountCreationSMS({ firstName, password, role }),
+        // });
+        if (email) {
+          sendRegisterEmail({
+            to: email,
+            context: {
+              name: firstName,
+              time: moment(new Date()).format("LLL"),
+              otp: emailOTP,
+              email,
+            },
+          });
+        }
       } catch (error) {
         console.log(error);
         res.status(400).json({

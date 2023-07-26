@@ -7,6 +7,7 @@ import createUser, {
   authorizeCreateUser,
   createUserValidators,
 } from "@/controllers/create-user";
+import getEmailOtp from "@/controllers/get-email-otp";
 import removeEmail from "@/controllers/remove-email";
 import resetPassword, {
   resetPasswordValidators,
@@ -15,6 +16,7 @@ import verifyEmail, {
   authorizeVerifyEmail,
   verifyEmailValidators,
 } from "@/controllers/verify-email";
+import getUserFromCredential from "@/middleware/get-user-from-credential";
 import validateBody from "@/middleware/validate-body";
 import verifyLogin from "@/middleware/verify-login";
 import { Router } from "express";
@@ -41,6 +43,10 @@ userRouter.put(
   "/password/reset",
   ...resetPasswordValidators,
   validateBody,
+  (req, res, next) => {
+    const { credential } = req.body;
+    getUserFromCredential(credential, "user")(req, res, next);
+  },
   resetPassword
 );
 
@@ -51,6 +57,8 @@ userRouter.put(
   validateBody,
   changeEmail
 );
+
+userRouter.get("/email/otp", verifyLogin, getEmailOtp);
 
 userRouter.delete("/email", verifyLogin, removeEmail);
 

@@ -1,5 +1,5 @@
 import db from "@/database";
-import { sendSMS } from "@/sms";
+import { composeResetPasswordSMS, sendSMS } from "@/sms";
 import generateRandomPassword from "@/utils/generate-random-password";
 import { body } from "express-validator";
 
@@ -8,6 +8,12 @@ export const resetPasswordValidators = [
 ];
 
 const resetPassword = (req, res) => {
+  if (!req.user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+  const { phone, email } = req.user;
   const { credential } = req.body;
   const password = generateRandomPassword();
   console.log(password);
@@ -20,6 +26,7 @@ const resetPassword = (req, res) => {
           message: "User not found",
         });
       }
+      // sendSMS({ phone, message: composeResetPasswordSMS({ password }) });
       res.status(200).json({ message: "Password reset successfully" });
     })
     .catch((error) => {
