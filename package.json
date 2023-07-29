@@ -4,7 +4,7 @@
   "main": "src/app.js",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/app",
+    "start": "babel-node src/app",
     "build": "babel src -d dist",
     "postinstall": "npm run build",
     "dev": "nodemon src/app.js --exec babel-node"
