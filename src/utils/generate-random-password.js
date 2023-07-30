@@ -29,7 +29,7 @@ const generateRandomPassword = () => {
   const UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
   const DIGIT_CHARS = "0123456789";
-  const SPECIAL_CHARS = "!@#$%^&*";
+  const SPECIAL_CHARS = "!#";
   const ALL_CHARS =
     UPPERCASE_CHARS + LOWERCASE_CHARS + DIGIT_CHARS + SPECIAL_CHARS;
 
