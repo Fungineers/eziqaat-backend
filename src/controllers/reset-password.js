@@ -16,7 +16,6 @@ module.exports.resetPassword = (req, res) => {
   const { phone } = req.user;
   const { credential } = req.body;
   const password = generateRandomPassword();
-  console.log(password);
 
   db.resetPassword({ credential, password })
     .then((results) => {

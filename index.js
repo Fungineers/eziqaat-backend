@@ -31,7 +31,7 @@ app.use("/worker", workerRouter);
 app.use("/donor", donorRouter);
 
 // Use the dynamic port, else default to 3000
-const port = getEnv("PORT") || 3000;
+const port = getEnv("PORT") || 3001;
 
 // Make the app listen to the port specified
 app.listen(port, () => {

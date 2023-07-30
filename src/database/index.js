@@ -118,7 +118,7 @@ class DB {
     return this.getQuery(sql, values);
   }
 
-  async getUserFROMCredential({ credential }) {
+  async getUserFromCredential({ credential }) {
     const sql = `
       SELECT * 
       FROM user_data
@@ -207,7 +207,7 @@ class DB {
     return this.getQuery(sql, values);
   }
 
-  async unassignAreaFROMChairperson({ areaId }) {
+  async unassignAreaFromChairperson({ areaId }) {
     const sql = `CALL UNASSIGN_AREA_FROM_CHAIRPERSON(?)`;
     const values = [areaId];
     return this.getQuery(sql, values);
