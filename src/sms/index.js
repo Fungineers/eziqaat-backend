@@ -17,13 +17,11 @@ const apiInstance = axios.create({
  */
 module.exports.sendSMS = ({ phone, message }) => {
   apiInstance
-    .get("/sendsms", {
-      params: new URLSearchParams({
-        hash: getEnv("SMS_API_KEY"),
-        receivernum: phone,
-        textmessage: message,
-        sendernum: "8583",
-      }),
+    .post("/sendsms", {
+      hash: getEnv("SMS_API_KEY"),
+      receivernum: phone,
+      textmessage: message,
+      sendernum: "8583",
     })
     .then((res) => {
       console.log("+ SMS Sent", res.data);
