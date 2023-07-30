@@ -1,12 +1,13 @@
 const { getEnv } = require("../config");
 const axios = require("axios");
 const { upperSnakeCaseToSentenceCase } = require("../utils");
+const moment = require("moment");
 
 /**
  * Create an API instance pointing to Veevo Tech SMS
  * Tool, with API hash
  */
-const apiInstance = axios({
+const apiInstance = axios.create({
   baseURL: "https://api.veevotech.com",
 });
 
