@@ -1,8 +1,8 @@
-import db from "@/database";
-import { regexps } from "@/constants";
-import { body } from "express-validator";
+const db = require("../database");
+const { regexps } = require("../constants");
+const { body } = require("express-validator");
 
-export const verifyEmailValidators = [
+module.exports.verifyEmailValidators = [
   body("emailOtp")
     .trim()
     .notEmpty()
@@ -11,14 +11,14 @@ export const verifyEmailValidators = [
     .withMessage("OTP must be 4 digits"),
 ];
 
-export const authorizeVerifyEmail = (req, res, next) => {
+module.exports.authorizeVerifyEmail = (req, res, next) => {
   if (req.user.emailVerified) {
     return res.status(403).json({ message: "Email already verified" });
   }
   next();
 };
 
-const verifyEmail = (req, res) => {
+module.exports.verifyEmail = (req, res) => {
   const { id } = req.user;
   const { emailOtp } = req.body;
 
@@ -37,5 +37,3 @@ const verifyEmail = (req, res) => {
       res.status(400).json({ message: error.sqlMessage });
     });
 };
-
-export default verifyEmail;

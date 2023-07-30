@@ -1,18 +1,18 @@
-import { config } from "dotenv";
-import admin from "firebase-admin";
+const { getEnv } = require("../config");
+const colors = require("colors");
 
-config();
+const admin = require("firebase-admin");
 
-export const firebaseApp = admin.initializeApp({
+module.exports.firebaseApp = admin.initializeApp({
   credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    projectId: getEnv(FIREBASE_PROJECT_ID),
+    privateKey: getEnv(FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")),
+    clientEmail: getEnv(FIREBASE_CLIENT_EMAIL),
   }),
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  databaseURL: getEnv(FIREBASE_DATABASE_URL),
 });
 
-export const createNotification = ({ userId, title, body, type }) => {
+module.exports.createNotification = ({ userId, title, body, type }) => {
   const createdAt = admin.database.ServerValue.TIMESTAMP;
   firebaseApp
     .database()
@@ -26,7 +26,9 @@ export const createNotification = ({ userId, title, body, type }) => {
     })
     .then((notificationRef) => {
       console.log(
-        `Type ${type} Notification -> User(${userId}) at ${new Date().toUTCString()}\n${notificationRef}`
+        colors.cyan.bold(
+          `\n+ Type ${type} Notification -> User(${userId}) at ${new Date().toUTCString()}\n${notificationRef}`
+        )
       );
     })
     .catch(console.log);

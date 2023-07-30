@@ -1,29 +1,39 @@
-import { roles } from "@/constants";
-import acceptPendingDonation from "@/controllers/accept-pending-donation";
-import addNewCollection, {
-  addNewCollectionValidator,
-} from "@/controllers/add-new-collection";
-import addPendingDonationRegistered, {
-  addPendingDonationRegisteredValidator,
-} from "@/controllers/add-pending-donation-registered";
-import addPendingDonationUnregistered, {
-  addPendingDonationUnregisteredValidator,
-} from "@/controllers/add-pending-donation-unregistered";
-import approveDonationRequest from "@/controllers/approve-donation-request";
-import collectAcceptedDonation from "@/controllers/collect-accepted-donation";
-import donorDonationRequest, {
+const { Router } = require("express");
+const {
+  verifyLogin,
+  authorizeRole,
+  validateBody,
+  useDonationInfo,
+  getUserFromCredential,
+} = require("../middleware");
+const { roles } = require("../constants");
+const {
   donorDonationRequestValidator,
-} from "@/controllers/donor-donation-request";
-import getDonationInfo from "@/controllers/get-donation-info";
-import getDonorHistory from "@/controllers/get-donor-history";
-import getDonorRequests from "@/controllers/get-donor-requests";
-import getRequestedDonations from "@/controllers/get-requested-donations";
-import authorizeRole from "@/middleware/authorize-role";
-import getUserFromCredential from "@/middleware/get-user-from-credential";
-import useDonationInfo from "@/middleware/use-donation-info";
-import validateBody from "@/middleware/validate-body";
-import verifyLogin from "@/middleware/verify-login";
-import { Router } from "express";
+  donorDonationRequest,
+} = require("../controllers/donor-donation-request");
+const {
+  getRequestedDonations,
+} = require("../controllers/get-requested-donations");
+const { getDonorRequests } = require("../controllers/get-donor-requests");
+const { getDonorHistory } = require("../controllers/get-donor-history");
+const {
+  addPendingDonationUnregisteredValidator,
+  addPendingDonationUnregistered,
+} = require("../controllers/add-pending-donation-unregistered");
+const {
+  approveDonationRequest,
+} = require("../controllers/approve-donation-request");
+const {
+  acceptPendingDonation,
+} = require("../controllers/accept-pending-donation");
+const {
+  collectAcceptedDonation,
+} = require("../controllers/collect-accepted-donation");
+const {
+  addNewCollectionValidator,
+  addNewCollection,
+} = require("../controllers/add-new-collection");
+const { getDonationInfo } = require("../controllers/get-donation-info");
 
 const donationRouter = Router();
 
@@ -55,13 +65,6 @@ donationRouter.get(
   verifyLogin,
   authorizeRole([roles.DONOR]),
   getDonorHistory
-);
-
-donationRouter.post(
-  "/registered",
-  ...addPendingDonationRegisteredValidator,
-  validateBody,
-  addPendingDonationRegistered
 );
 
 donationRouter.post(
@@ -109,4 +112,4 @@ donationRouter.post(
 
 donationRouter.get("/:donationId", verifyLogin, getDonationInfo);
 
-export default donationRouter;
+module.exports = donationRouter;

@@ -6,4 +6,4 @@ const roles = {
   DONOR: "DONOR",
 };
 
-export default roles;
+module.exports = roles;

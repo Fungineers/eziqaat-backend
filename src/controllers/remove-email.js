@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const removeEmail = (req, res) => {
+module.exports.removeEmail = (req, res) => {
   const { id } = req.user;
 
   db.removeEmail({ id }).then((results) => {
@@ -13,5 +13,3 @@ const removeEmail = (req, res) => {
     res.status(200).json({ message: "Email removed" });
   });
 };
-
-export default removeEmail;

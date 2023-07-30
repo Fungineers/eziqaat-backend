@@ -1,8 +1,8 @@
-import db from "@/database";
-import { sendRequestOtpEmail } from "@/email";
-import generateRandomOTP from "@/utils/generate-random-otp";
+const db = require("../database");
+const { sendRequestOtpEmail } = require("../email");
+const { generateRandomOTP } = require("../utils");
 
-const getEmailOtp = (req, res) => {
+module.exports.getEmailOtp = (req, res) => {
   const { id, email } = req.user;
   const emailOtp = generateRandomOTP();
   db.requestOtp({ id, emailOtp })
@@ -19,5 +19,3 @@ const getEmailOtp = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default getEmailOtp;

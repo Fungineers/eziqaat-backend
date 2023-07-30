@@ -1,16 +1,21 @@
-import { roles } from "@/constants";
-import createWorker, {
+const { Router } = require("express");
+const { authorizeRole, validateBody } = require("../middleware");
+const { roles } = require("../constants");
+const {
   createWorkerValidators,
-} from "@/controllers/create-worker";
-import getActiveWorkersByArea from "@/controllers/get-active-workers-by-area";
-import getInActiveWorkersByArea from "@/controllers/get-inactive-workers-by-area";
-import getWorkerAcceptedDonations from "@/controllers/get-worker-accepted-donations";
-import getWorkerById from "@/controllers/get-worker-by-id";
-import getWorkerCollectedDonations from "@/controllers/get-worker-collected-donations";
-import getWorkerStats from "@/controllers/get-worker-stats";
-import authorizeRole from "@/middleware/authorize-role";
-import validateBody from "@/middleware/validate-body";
-import { Router } from "express";
+  createWorker,
+} = require("../controllers/create-worker");
+const { getWorkerStats } = require("../controllers/get-worker-stats");
+const {
+  getWorkerAcceptedDonations,
+} = require("../controllers/get-worker-accepted-donations");
+const {
+  getWorkerCollectedDonations,
+} = require("../controllers/get-worker-collected-donations");
+const {
+  getInActiveWorkersByArea,
+} = require("../controllers/get-inactive-workers-by-area");
+const { getWorkerById } = require("../controllers/get-worker-by-id");
 
 const workerRouter = Router();
 
@@ -39,7 +44,7 @@ workerRouter.get(
 workerRouter.get(
   "/",
   authorizeRole([roles.CHAIRPERSON]),
-  getActiveWorkersByArea
+  getInActiveWorkersByArea
 );
 
 workerRouter.get(
@@ -50,4 +55,4 @@ workerRouter.get(
 
 workerRouter.get("/:id", authorizeRole([roles.CHAIRPERSON]), getWorkerById);
 
-export default workerRouter;
+module.exports = workerRouter;

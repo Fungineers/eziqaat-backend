@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const getRequestedDonations = (req, res) => {
+module.exports.getRequestedDonations = (req, res) => {
   const { area } = req.user;
   if (!area) {
     return res.status(403).json({ message: "You don't have an area assigned" });
@@ -21,5 +21,3 @@ const getRequestedDonations = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default getRequestedDonations;

@@ -1,24 +1,46 @@
-import { roles } from "@/constants";
-import assignAreaToChairperson from "@/controllers/assign-area-to-chairperson";
-import changeAreaName, {
+const { Router } = require("express");
+const {
+  verifyLogin,
+  authorizeRole,
+  validateBody,
+  hasAreaAssigned,
+} = require("../middleware");
+const { roles } = require("../constants");
+const {
+  createAreaValidators,
+  createArea,
+} = require("../controllers/create-area");
+const { getAreas } = require("../controllers/get-areas");
+const {
   changeAreaNameValidators,
-} from "@/controllers/change-area-name";
-import createArea, { createAreaValidators } from "@/controllers/create-area";
-import getAreaAcceptedDonations from "@/controllers/get-area-accepted-donations";
-import getAreaCollectedDonations from "@/controllers/get-area-collected-donations";
-import getAreaDailyStats from "@/controllers/get-area-daily-stats";
-import getAreaPendingDonations from "@/controllers/get-area-pending-donations";
-import getAreaPendingStats from "@/controllers/get-area-pending-stats";
-import getAreaRequestStats from "@/controllers/get-area-request-stats";
-import getAreaRequestedDonations from "@/controllers/get-area-requested-donations";
-import getAreaStats from "@/controllers/get-area-stats";
-import getAreas from "@/controllers/get-areas";
-import unassignAreaFromChairperson from "@/controllers/unassign-area-from-chairperson";
-import authorizeRole from "@/middleware/authorize-role";
-import hasAreaAssigned from "@/middleware/has-area-assigned";
-import validateBody from "@/middleware/validate-body";
-import verifyLogin from "@/middleware/verify-login";
-import { Router } from "express";
+  changeAreaName,
+} = require("../controllers/change-area-name");
+const {
+  assignAreaToChairperson,
+} = require("../controllers/assign-area-to-chairperson");
+const {
+  unassignAreaFromChairperson,
+} = require("../controllers/unassign-area-from-chairperson");
+const { getAreaStats } = require("../controllers/get-area-stats");
+const { getAreaDailyStats } = require("../controllers/get-area-daily-stats");
+const {
+  getAreaRequestStats,
+} = require("../controllers/get-area-request-stats");
+const {
+  getAreaRequestedDonations,
+} = require("../controllers/get-area-requested-donations");
+const {
+  getAreaPendingStats,
+} = require("../controllers/get-area-pending-stats");
+const {
+  getAreaPendingDonations,
+} = require("../controllers/get-area-pending-donations");
+const {
+  getAreaAcceptedDonations,
+} = require("../controllers/get-area-accepted-donations");
+const {
+  getAreaCollectedDonations,
+} = require("../controllers/get-area-collected-donations");
 
 const areaRouter = Router();
 
@@ -128,4 +150,4 @@ areaRouter.get(
   getAreaCollectedDonations
 );
 
-export default areaRouter;
+module.exports = areaRouter;

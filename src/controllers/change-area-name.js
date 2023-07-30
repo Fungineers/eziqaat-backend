@@ -1,8 +1,8 @@
-import { regexps } from "@/constants";
-import db from "@/database";
-import { body } from "express-validator";
+const { regexps } = require("../constants");
+const { body } = require("express-validator");
+const db = require("../database");
 
-export const changeAreaNameValidators = [
+module.exports.changeAreaNameValidators = [
   body("areaName")
     .trim()
     .notEmpty()
@@ -11,7 +11,7 @@ export const changeAreaNameValidators = [
     .withMessage("Invalid area name"),
 ];
 
-const changeAreaName = (req, res) => {
+module.exports.changeAreaName = (req, res) => {
   const { id } = req.params;
   const { areaName } = req.body;
 
@@ -34,5 +34,3 @@ const changeAreaName = (req, res) => {
       });
     });
 };
-
-export default changeAreaName;

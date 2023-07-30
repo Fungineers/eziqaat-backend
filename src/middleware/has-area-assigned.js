@@ -8,4 +8,4 @@ const hasAreaAssigned = (req, res, next) => {
   next();
 };
 
-export default hasAreaAssigned;
+module.exports = hasAreaAssigned;

@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const assignAreaToChairperson = (req, res) => {
+module.exports.assignAreaToChairperson = (req, res) => {
   const { areaId, chairpersonId } = req.params;
 
   db.assignAreaToChairperson({ areaId, chairpersonId })
@@ -23,5 +23,3 @@ const assignAreaToChairperson = (req, res) => {
       });
     });
 };
-
-export default assignAreaToChairperson;

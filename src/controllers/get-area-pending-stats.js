@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const getAreaPendingStats = (req, res) => {
+module.exports.getAreaPendingStats = (req, res) => {
   const { area } = req.user;
 
   const { id: areaId } = area;
@@ -16,5 +16,3 @@ const getAreaPendingStats = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default getAreaPendingStats;

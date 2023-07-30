@@ -1,4 +1,4 @@
-import { default as db } from "@/database";
+const db = require("../database");
 
 const useDonationInfo = (donationId) => (req, res, next) => {
   db.getDonationInfo({ donationId })
@@ -12,4 +12,4 @@ const useDonationInfo = (donationId) => (req, res, next) => {
     .finally(next);
 };
 
-export default useDonationInfo;
+module.exports = useDonationInfo;

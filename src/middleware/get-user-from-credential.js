@@ -1,4 +1,4 @@
-import db from "@/database";
+const db = require("../database");
 
 const getUserFromCredential = (credential, name) => (req, res, next) => {
   db.getUserFromCredential({ credential })
@@ -16,4 +16,4 @@ const getUserFromCredential = (credential, name) => (req, res, next) => {
     });
 };
 
-export default getUserFromCredential;
+module.exports = getUserFromCredential;

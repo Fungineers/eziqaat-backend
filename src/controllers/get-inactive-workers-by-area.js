@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const getInActiveWorkersByArea = (req, res) => {
+module.exports.getInActiveWorkersByArea = (req, res) => {
   const { area } = req.user;
 
   if (!area) {
@@ -18,5 +18,3 @@ const getInActiveWorkersByArea = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default getInActiveWorkersByArea;

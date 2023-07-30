@@ -1,6 +1,6 @@
-import { roles } from "@/constants";
-import db from "@/database";
-import { verifyToken } from "@/jwt";
+const { roles } = require("../constants");
+const db = require("../database");
+const { verifyToken } = require("../jwt");
 
 const platformRoles = {
   WEB: [roles.GENERAL_SECRETARY, roles.OFFICE_SECRETARY],
@@ -41,4 +41,4 @@ const authenticateUser = (req, res, next) => {
   }
 };
 
-export default authenticateUser;
+module.exports = authenticateUser;

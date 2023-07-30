@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const searchUniqueDonor = (req, res) => {
+module.exports.searchUniqueDonor = (req, res) => {
   const { s } = req.query;
 
   if (!s) {
@@ -20,5 +20,3 @@ const searchUniqueDonor = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default searchUniqueDonor;

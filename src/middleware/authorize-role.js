@@ -1,4 +1,4 @@
-import { roles } from "@/constants";
+const { roles } = require("../constants");
 
 const authorizeRole = (allowedRoles = roles) => {
   return (req, res, next) => {
@@ -13,4 +13,4 @@ const authorizeRole = (allowedRoles = roles) => {
   };
 };
 
-export default authorizeRole;
+module.exports = authorizeRole;

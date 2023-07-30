@@ -1,8 +1,8 @@
-import { regexps } from "@/constants";
-import db from "@/database";
-import { body } from "express-validator";
+const { regexps } = require("../constants");
+const db = require("../database");
+const { body } = require("express-validator");
 
-export const createAreaValidators = [
+module.exports.createAreaValidators = [
   body("areaName")
     .trim()
     .notEmpty()
@@ -11,7 +11,7 @@ export const createAreaValidators = [
     .withMessage("Invalid area name"),
 ];
 
-const createArea = (req, res) => {
+module.exports.createArea = (req, res) => {
   const { areaName } = req.body;
 
   db.createArea({ areaName })
@@ -36,5 +36,3 @@ const createArea = (req, res) => {
       });
     });
 };
-
-export default createArea;

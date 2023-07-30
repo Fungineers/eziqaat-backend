@@ -1,8 +1,8 @@
-import { regexps } from "@/constants";
-import db from "@/database";
-import { body } from "express-validator";
+const { regexps } = require("../constants");
+const db = require("../database");
+const { body } = require("express-validator");
 
-export const changePhoneValidators = [
+module.exports.changePhoneValidators = [
   body("phone")
     .trim()
     .notEmpty()
@@ -11,7 +11,7 @@ export const changePhoneValidators = [
     .withMessage("Invalid phone"),
 ];
 
-const changePhone = (req, res) => {
+module.exports.changePhone = (req, res) => {
   const { id } = req.user;
   const { phone } = req.body;
 
@@ -25,5 +25,3 @@ const changePhone = (req, res) => {
     res.status(200).json({ message: "Phone changed" });
   });
 };
-
-export default changePhone;

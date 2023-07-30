@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const approveDonationRequest = (req, res) => {
+module.exports.approveDonationRequest = (req, res) => {
   const { donationId } = req.params;
 
   db.approveDonationRequest({ donationId })
@@ -17,5 +17,3 @@ const approveDonationRequest = (req, res) => {
       return res.status(200).json({ message: err.sqlMessage });
     });
 };
-
-export default approveDonationRequest;

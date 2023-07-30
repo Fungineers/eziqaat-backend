@@ -1,6 +1,7 @@
-import getEnv from "@/config/get-env";
-import { roles } from "@/constants";
-import { createConnection } from "mysql2/promise";
+const { getEnv } = require("../config");
+const { roles, status } = require("../constants");
+const { createConnection } = require("mysql2/promise");
+const colors = require("colors");
 
 /**
  * A class that handles the db connection, and provides
@@ -28,7 +29,9 @@ class DB {
       .connect()
       .then(() => {
         console.log(
-          `⚡ Connect to DB "${database}" via user "${user}" on ${host}:${port}`
+          colors.green.bold(
+            `\n+ Connected to DB "${database}" via user "${user}" on ${host}:${port}`
+          )
         );
       })
       .catch((error) => {
@@ -115,7 +118,7 @@ class DB {
     return this.getQuery(sql, values);
   }
 
-  async getUserFromCredential({ credential }) {
+  async getUserFROMCredential({ credential }) {
     const sql = `
       SELECT * 
       FROM user_data
@@ -204,7 +207,7 @@ class DB {
     return this.getQuery(sql, values);
   }
 
-  async unassignAreaFromChairperson({ areaId }) {
+  async unassignAreaFROMChairperson({ areaId }) {
     const sql = `CALL UNASSIGN_AREA_FROM_CHAIRPERSON(?)`;
     const values = [areaId];
     return this.getQuery(sql, values);
@@ -336,11 +339,11 @@ class DB {
     `;
     const values = [
       workerId,
-      "COLLECTED",
+      status.COLLECTED,
       workerId,
-      "COLLECTED",
+      status.COLLECTED,
       workerId,
-      "COLLECTED",
+      status.COLLECTED,
       workerId,
     ];
     return this.getQuery(sql, values);
@@ -391,11 +394,11 @@ class DB {
       SELECT COUNT(id) AS requestCount FROM donation WHERE status != ? AND donorId = ?;
     `;
     const values = [
-      "COLLECTED",
+      status.COLLECTED,
       donorId,
-      "COLLECTED",
+      status.COLLECTED,
       donorId,
-      "COLLECTED",
+      status.COLLECTED,
       donorId,
     ];
     return this.getQuery(sql, values);
@@ -422,11 +425,11 @@ class DB {
       AND areaId = ?;
     `;
     const values = [
-      "COLLECTED",
+      status.COLLECTED,
       areaId,
-      "COLLECTED",
+      status.COLLECTED,
       areaId,
-      "COLLECTED",
+      status.COLLECTED,
       areaId,
     ];
     return this.getQuery(sql, values);
@@ -464,15 +467,15 @@ class DB {
       AND requestedAt BETWEEN ? AND ?;
     `;
     const values = [
-      "COLLECTED",
+      status.COLLECTED,
       areaId,
       today,
       tomorrow,
-      "COLLECTED",
+      status.COLLECTED,
       areaId,
       today,
       tomorrow,
-      "COLLECTED",
+      status.COLLECTED,
       areaId,
       today,
       tomorrow,
@@ -677,13 +680,13 @@ class DB {
     `;
 
     const values = [
-      "COLLECTED",
+      status.COLLECTED,
       workerId,
-      "COLLECTED",
+      status.COLLECTED,
       workerId,
-      "COLLECTED",
+      status.COLLECTED,
       workerId,
-      "PENDING",
+      status.PENDING,
       areaId,
     ];
     return this.getQuery(sql, values);
@@ -722,4 +725,4 @@ class DBSingleton {
 
 const db = DBSingleton.getDb();
 
-export default db;
+module.exports = db;

@@ -1,10 +1,9 @@
-import { regexps } from "@/constants";
-import db from "@/database";
-import generateRandomOTP from "@/utils/generate-random-otp";
-import generateRandomPassword from "@/utils/generate-random-password";
-import { body } from "express-validator";
+const { regexps } = require("../constants");
+const db = require("../database");
+const { generateRandomOTP, generateRandomPassword } = require("../utils");
+const { body } = require("express-validator");
 
-export const createWorkerValidators = [
+module.exports.createWorkerValidators = [
   body("firstName").trim().notEmpty().withMessage("First name is required"),
 
   body("lastName").trim().notEmpty().withMessage("Last name is required"),
@@ -26,7 +25,7 @@ export const createWorkerValidators = [
     .withMessage("Invalid CNIC"),
 ];
 
-const createWorker = (req, res) => {
+module.exports.createWorker = (req, res) => {
   const { id: chairpersonId } = req.user;
   const { firstName, lastName, email, phone, cnic } = req.body;
 
@@ -66,4 +65,3 @@ const createWorker = (req, res) => {
       });
     });
 };
-export default createWorker;

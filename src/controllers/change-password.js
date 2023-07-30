@@ -1,8 +1,8 @@
-import { regexps } from "@/constants";
-import db from "@/database";
-import { body } from "express-validator";
+const { regexps } = require("../constants");
+const db = require("../database");
+const { body } = require("express-validator");
 
-export const changePasswordValidators = [
+module.exports.changePasswordValidators = [
   body("currentPassword")
     .trim()
     .notEmpty()
@@ -18,7 +18,7 @@ export const changePasswordValidators = [
     .withMessage("Weak password"),
 ];
 
-const changePassword = (req, res) => {
+module.exports.changePassword = (req, res) => {
   const { id } = req.user;
   const { currentPassword, newPassword } = req.body;
 
@@ -44,5 +44,3 @@ const changePassword = (req, res) => {
       res.status(400).json({ message: error.sqlMessage });
     });
 };
-
-export default changePassword;

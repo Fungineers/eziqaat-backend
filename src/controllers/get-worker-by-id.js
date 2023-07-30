@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const getWorkerById = (req, res) => {
+module.exports.getWorkerById = (req, res) => {
   const { id: workerId } = req.params;
 
   db.getWorkerDetails({ workerId })
@@ -35,5 +35,3 @@ const getWorkerById = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default getWorkerById;

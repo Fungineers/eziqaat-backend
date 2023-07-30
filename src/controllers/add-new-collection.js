@@ -1,8 +1,8 @@
-import db from "@/database";
-import { composeCollectionSMS, sendSMS } from "@/sms";
-import { body } from "express-validator";
+const db = require("../database");
+const { composeCollectionSMS, sendSMS } = require("../sms");
+const { body } = require("express-validator");
 
-export const addNewCollectionValidator = [
+module.exports.addNewCollectionValidator = [
   body("amount")
     .trim()
     .notEmpty()
@@ -13,7 +13,7 @@ export const addNewCollectionValidator = [
   body("address").trim().notEmpty().withMessage("Address is required"),
 ];
 
-const addNewCollection = (req, res) => {
+module.exports.addNewCollection = (req, res) => {
   const donor = req.donor;
   if (!donor) {
     return res.status(404).json({ message: "Donor not found" });
@@ -54,5 +54,3 @@ const addNewCollection = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default addNewCollection;

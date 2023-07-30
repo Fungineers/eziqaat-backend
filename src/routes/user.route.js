@@ -1,25 +1,37 @@
-import changeEmail, { changeEmailValidators } from "@/controllers/change-email";
-import changePassword, {
-  changePasswordValidators,
-} from "@/controllers/change-password";
-import changePhone, { changePhoneValidators } from "@/controllers/change-phone";
-import createUser, {
-  authorizeCreateUser,
+const { Router } = require("express");
+const {
   createUserValidators,
-} from "@/controllers/create-user";
-import getEmailOtp from "@/controllers/get-email-otp";
-import removeEmail from "@/controllers/remove-email";
-import resetPassword, {
+  authorizeCreateUser,
+  createUser,
+} = require("../controllers/create-user");
+const {
+  validateBody,
+  verifyLogin,
+  getUserFromCredential,
+} = require("../middleware");
+const {
+  changePasswordValidators,
+  changePassword,
+} = require("../controllers/change-password");
+const {
   resetPasswordValidators,
-} from "@/controllers/reset-password";
-import verifyEmail, {
+  resetPassword,
+} = require("../controllers/reset-password");
+const {
+  changeEmailValidators,
+  changeEmail,
+} = require("../controllers/change-email");
+const { getEmailOtp } = require("../controllers/get-email-otp");
+const { removeEmail } = require("../controllers/remove-email");
+const {
   authorizeVerifyEmail,
   verifyEmailValidators,
-} from "@/controllers/verify-email";
-import getUserFromCredential from "@/middleware/get-user-from-credential";
-import validateBody from "@/middleware/validate-body";
-import verifyLogin from "@/middleware/verify-login";
-import { Router } from "express";
+  verifyEmail,
+} = require("../controllers/verify-email");
+const {
+  changePhoneValidators,
+  changePhone,
+} = require("../controllers/change-phone");
 
 const userRouter = Router();
 
@@ -79,4 +91,4 @@ userRouter.put(
   changePhone
 );
 
-export default userRouter;
+module.exports = userRouter;

@@ -1,9 +1,8 @@
-import { roles } from "@/constants";
-import getDonorStats from "@/controllers/get-donor-stats";
-import searchUniqueDonor from "@/controllers/search-unique-donor";
-import authorizeRole from "@/middleware/authorize-role";
-import verifyLogin from "@/middleware/verify-login";
-import { Router } from "express";
+const { Router } = require("express");
+const { verifyLogin, authorizeRole } = require("../middleware");
+const { roles } = require("../constants");
+const { getDonorStats } = require("../controllers/get-donor-stats");
+const { searchUniqueDonor } = require("../controllers/search-unique-donor");
 
 const donorRouter = Router();
 
@@ -16,4 +15,4 @@ donorRouter.get(
 
 donorRouter.get("/search-unique", verifyLogin, searchUniqueDonor);
 
-export default donorRouter;
+module.exports = donorRouter;

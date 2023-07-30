@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const getAreaCollectedDonations = (req, res) => {
+module.exports.getAreaCollectedDonations = (req, res) => {
   const { area } = req.user;
   const { s } = req.query;
 
@@ -19,5 +19,3 @@ const getAreaCollectedDonations = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default getAreaCollectedDonations;

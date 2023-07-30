@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const getAreas = (req, res) => {
+module.exports.getAreas = (req, res) => {
   db.getAreas()
     .then((result) => {
       const areas = result[0];
@@ -10,5 +10,3 @@ const getAreas = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default getAreas;

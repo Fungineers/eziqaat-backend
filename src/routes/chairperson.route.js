@@ -1,16 +1,15 @@
-import { roles } from "@/constants";
-import getChairpersonStats from "@/controllers/get-chaiperson-stats";
-import authorizeRole from "@/middleware/authorize-role";
-import verifyLogin from "@/middleware/verify-login";
-import { Router } from "express";
+const { Router } = require("express");
+const { verifyLogin, authorizeRole } = require("../middleware");
+const { roles } = require("../constants");
+const { getDonorStats } = require("../controllers/get-donor-stats");
 
 const donorRouter = Router();
 
 donorRouter.get(
   "/stats",
   verifyLogin,
-  authorizeRole([roles.CHAIRPERSON]),
-  getChairpersonStats
+  authorizeRole([roles.DONOR]),
+  getDonorStats
 );
 
-export default donorRouter;
+module.exports = donorRouter;

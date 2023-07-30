@@ -1,5 +1,5 @@
-import { roles } from "@/constants";
-import db from "@/database";
+const { roles } = require("../constants");
+const db = require("../database");
 
 const getWorkerChairperson = (req, res, next) => {
   const { user } = req;
@@ -36,4 +36,4 @@ const getWorkerChairperson = (req, res, next) => {
     });
 };
 
-export default getWorkerChairperson;
+module.exports = getWorkerChairperson;

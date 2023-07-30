@@ -1,8 +1,8 @@
-import db from "@/database";
+const db = require("../database");
 
-export const addPendingDonationUnregisteredValidator = [];
+module.exports.addPendingDonationUnregisteredValidator = [];
 
-const addPendingDonationUnregistered = (req, res) => {
+module.exports.addPendingDonationUnregistered = (req, res) => {
   const {
     area: { id: areaId },
   } = req.user;
@@ -28,5 +28,3 @@ const addPendingDonationUnregistered = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default addPendingDonationUnregistered;

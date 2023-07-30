@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const unassignAreaFromChairperson = (req, res) => {
+module.exports.unassignAreaFromChairperson = (req, res) => {
   const { areaId } = req.params;
 
   db.unassignAreaFromChairperson({ areaId })
@@ -23,5 +23,3 @@ const unassignAreaFromChairperson = (req, res) => {
       });
     });
 };
-
-export default unassignAreaFromChairperson;

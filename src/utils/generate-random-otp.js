@@ -1,5 +1,10 @@
-import getRandomCharacter from "./get-random-character";
+const getRandomCharacter = require("./get-random-character");
 
+/**
+ * This function returns a random 4 digit OTP.
+ * Example: ```4867```
+ * @returns {string} a random string of 4 digits
+ */
 const generateRandomOTP = () => {
   const DIGIT_CHARS = "0123456789";
 
@@ -13,4 +18,4 @@ const generateRandomOTP = () => {
   return randomString;
 };
 
-export default generateRandomOTP;
+module.exports = generateRandomOTP;

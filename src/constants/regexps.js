@@ -8,4 +8,4 @@ const regexps = {
   areaName: /^([a-zA-Z\u0080-\u00FF]+(?:\. |-| |\'))*[a-zA-Z\u0080-\u00FF]*$/,
 };
 
-export default regexps;
+module.exports = regexps;

@@ -1,10 +1,10 @@
-import db from "@/database";
-import { sendResetEmail } from "@/email";
-import generateRandomOTP from "@/utils/generate-random-otp";
-import { body } from "express-validator";
-import moment from "moment";
+const db = require("../database");
+const { sendResetEmail } = require("../email");
+const { generateRandomOTP } = require("../utils");
+const { body } = require("express-validator");
+const moment = require("moment");
 
-export const changeEmailValidators = [
+module.exports.changeEmailValidators = [
   body("email")
     .trim()
     .notEmpty()
@@ -13,7 +13,7 @@ export const changeEmailValidators = [
     .withMessage("Invalid email"),
 ];
 
-const changeEmail = (req, res) => {
+module.exports.changeEmail = (req, res) => {
   const { id, firstName } = req.user;
   const { email } = req.body;
 
@@ -42,5 +42,3 @@ const changeEmail = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default changeEmail;

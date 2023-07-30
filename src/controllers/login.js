@@ -1,8 +1,8 @@
-import db from "@/database";
-import { generateToken } from "@/jwt";
-import { body } from "express-validator";
+const db = require("../database");
+const { generateToken } = require("../jwt");
+const { body } = require("express-validator");
 
-export const loginValidators = [
+module.exports.loginValidators = [
   body("credential").trim().notEmpty().withMessage("Credential is required"),
 
   body("password").trim().notEmpty().withMessage("Password is required"),
@@ -15,7 +15,7 @@ export const loginValidators = [
     .withMessage("Invalid platform"),
 ];
 
-const login = (req, res) => {
+module.exports.login = (req, res) => {
   const { credential, password, platform } = req.body;
 
   db.verifyCredentials({ credential, password, platform })
@@ -57,5 +57,3 @@ const login = (req, res) => {
       });
     });
 };
-
-export default login;

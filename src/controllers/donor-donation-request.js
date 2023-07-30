@@ -1,7 +1,7 @@
-import db from "@/database";
-import { body } from "express-validator";
+const db = require("../database");
+const { body } = require("express-validator");
 
-export const donorDonationRequestValidator = [
+module.exports.donorDonationRequestValidator = [
   body("amount")
     .trim()
     .notEmpty()
@@ -13,7 +13,7 @@ export const donorDonationRequestValidator = [
   body("areaId").trim().notEmpty().withMessage("Area is required"),
 ];
 
-const donorDonationRequest = (req, res) => {
+module.exports.donorDonationRequest = (req, res) => {
   const { id: donorId } = req.user;
   const { areaId, amount, address } = req.body;
 
@@ -30,5 +30,3 @@ const donorDonationRequest = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default donorDonationRequest;

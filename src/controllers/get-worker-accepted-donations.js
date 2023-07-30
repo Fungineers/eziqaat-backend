@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const getWorkerAcceptedDonations = (req, res) => {
+module.exports.getWorkerAcceptedDonations = (req, res) => {
   const { id: workerId } = req.user;
   const { s } = req.query;
 
@@ -18,5 +18,3 @@ const getWorkerAcceptedDonations = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default getWorkerAcceptedDonations;

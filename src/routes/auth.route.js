@@ -1,8 +1,7 @@
-import getCurrentUser from "@/controllers/get-current-user";
-import login, { loginValidators } from "@/controllers/login";
-import validateBody from "@/middleware/validate-body";
-import { Router } from "express";
-import { body } from "express-validator";
+const { Router } = require("express");
+const { loginValidators, login } = require("../controllers/login");
+const { validateBody } = require("../middleware");
+const { getCurrentUser } = require("../controllers/get-current-user");
 
 const authRouter = Router();
 
@@ -10,4 +9,4 @@ authRouter.post("/login", ...loginValidators, validateBody, login);
 
 authRouter.get("/me", getCurrentUser);
 
-export default authRouter;
+module.exports = authRouter;

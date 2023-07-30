@@ -5,4 +5,4 @@ const verifyLogin = (req, res, next) => {
   return next();
 };
 
-export default verifyLogin;
+module.exports = verifyLogin;

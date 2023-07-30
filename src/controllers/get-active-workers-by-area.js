@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const getActiveWorkersByArea = (req, res) => {
+module.exports.getActiveWorkersByArea = (req, res) => {
   const { area } = req.user;
   const { s } = req.query;
 
@@ -22,4 +22,4 @@ const getActiveWorkersByArea = (req, res) => {
     });
 };
 
-export default getActiveWorkersByArea;
+module.exports = getActiveWorkersByArea;

@@ -1,6 +1,6 @@
-import db from "@/database";
+const db = require("../database");
 
-const getAreaDailyStats = (req, res) => {
+module.exports.getAreaDailyStats = (req, res) => {
   const {
     area: { id: areaId },
   } = req.user;
@@ -22,5 +22,3 @@ const getAreaDailyStats = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-export default getAreaDailyStats;

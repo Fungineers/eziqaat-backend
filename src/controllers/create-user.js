@@ -1,13 +1,12 @@
-import { regexps, roles } from "@/constants";
-import db from "@/database";
-import { sendRegisterEmail } from "@/email";
-import { composeAccountCreationSMS, sendSMS } from "@/sms";
-import generateRandomOTP from "@/utils/generate-random-otp";
-import generateRandomPassword from "@/utils/generate-random-password";
-import { body } from "express-validator";
-import moment from "moment";
+const { regexps, roles } = require("../constants");
+const db = require("../database");
+const { sendRegisterEmail } = require("../email");
+const { composeAccountCreationSMS, sendSMS } = require("../sms");
+const { generateRandomOTP, generateRandomPassword } = require("../utils");
+const { body } = require("express-validator");
+const moment = require("moment");
 
-export const authorizeCreateUser = (req, res, next) => {
+module.exports.authorizeCreateUser = (req, res, next) => {
   const { user } = req;
   const { role: userRole } = req.body;
   if (user) {
@@ -32,7 +31,7 @@ export const authorizeCreateUser = (req, res, next) => {
   }
 };
 
-export const createUserValidators = [
+module.exports.createUserValidators = [
   body("firstName").trim().notEmpty().withMessage("First name is required"),
 
   body("lastName").trim().notEmpty().withMessage("Last name is required"),
@@ -60,7 +59,7 @@ export const createUserValidators = [
     .withMessage("Invalid CNIC"),
 ];
 
-const createUser = (req, res) => {
+module.exports.createUser = (req, res) => {
   const { firstName, lastName, email, role, phone, cnic } = req.body;
 
   const password = generateRandomPassword();
@@ -114,5 +113,3 @@ const createUser = (req, res) => {
       });
     });
 };
-
-export default createUser;

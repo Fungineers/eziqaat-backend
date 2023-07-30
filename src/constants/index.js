@@ -1,2 +1,5 @@
-export { default as roles } from "./roles";
-export { default as regexps } from "./regexps";
+module.exports = {
+  roles: require("./roles"),
+  regexps: require("./regexps"),
+  status: require("./status"),
+};

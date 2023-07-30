@@ -1,4 +1,4 @@
-const getCurrentUser = (req, res) => {
+module.exports.getCurrentUser = (req, res) => {
   const { user } = req;
   if (user) {
     res.status(200).json({
@@ -11,5 +11,3 @@ const getCurrentUser = (req, res) => {
     });
   }
 };
-
-export default getCurrentUser;

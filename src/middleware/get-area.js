@@ -1,4 +1,4 @@
-import getUserArea from "@/utils/get-user-area";
+const { getUserArea } = require("../utils");
 
 const getArea = (req, res, next) => {
   const { user } = req;
@@ -27,4 +27,4 @@ const getArea = (req, res, next) => {
   }
 };
 
-export default getArea;
+module.exports = getArea;

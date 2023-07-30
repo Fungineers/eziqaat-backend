@@ -1,13 +1,13 @@
-import db from "@/database";
-import { composeResetPasswordSMS, sendSMS } from "@/sms";
-import generateRandomPassword from "@/utils/generate-random-password";
-import { body } from "express-validator";
+const db = require("../database");
+const { composeResetPasswordSMS, sendSMS } = require("../sms");
+const { generateRandomPassword } = require("../utils");
+const { body } = require("express-validator");
 
-export const resetPasswordValidators = [
+module.exports.resetPasswordValidators = [
   body("credential").trim().notEmpty().withMessage("Credential is required"),
 ];
 
-const resetPassword = (req, res) => {
+module.exports.resetPassword = (req, res) => {
   if (!req.user) {
     return res.status(404).json({
       message: "User not found",
@@ -33,5 +33,3 @@ const resetPassword = (req, res) => {
       res.status(400).json({ message: error.sqlMessage });
     });
 };
-
-export default resetPassword;

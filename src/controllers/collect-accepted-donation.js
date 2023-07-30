@@ -1,7 +1,7 @@
-import db from "@/database";
-import { composeCollectionSMS, sendSMS } from "@/sms";
+const db = require("../database");
+const { composeCollectionSMS, sendSMS } = require("../sms");
 
-const collectAcceptedDonation = (req, res) => {
+module.exports.collectAcceptedDonation = (req, res) => {
   const donationInfo = req.donationInfo;
   const { donationId } = req.params;
   const { id: workerId } = req.user;
@@ -35,5 +35,3 @@ const collectAcceptedDonation = (req, res) => {
       return res.status(200).json({ message: err.sqlMessage });
     });
 };
-
-export default collectAcceptedDonation;

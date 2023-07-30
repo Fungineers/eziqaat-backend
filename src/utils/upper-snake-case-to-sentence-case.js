@@ -1,3 +1,9 @@
+/**
+ * This function converts upper snake case to sentence case.
+ * For Example, ```HELLO_WORLD => Hello World```
+ * @param {string} inputString in snake case
+ * @returns {string} sentence case output
+ */
 const upperSnakeCaseToSentenceCase = (inputString) => {
   // Replace underscores with spaces
   const stringWithSpaces = inputString.toLowerCase().replace(/_/g, " ");
@@ -16,4 +22,4 @@ const upperSnakeCaseToSentenceCase = (inputString) => {
   return sentenceCaseString;
 };
 
-export default upperSnakeCaseToSentenceCase;
+module.exports = upperSnakeCaseToSentenceCase;
