@@ -10,6 +10,8 @@ const donationRouter = require("./src/routes/donation.route");
 const areaRouter = require("./src/routes/area.route");
 const authRouter = require("./src/routes/auth.route");
 const userRouter = require("./src/routes/user.route");
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./doc.json");
 
 // Create an express app
 const app = express();
@@ -29,6 +31,9 @@ app.use("/area", areaRouter);
 app.use("/donation", donationRouter);
 app.use("/worker", workerRouter);
 app.use("/donor", donorRouter);
+
+// API docs
+app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Use the dynamic port, else default to 3000
 const port = getEnv("PORT") || 3001;

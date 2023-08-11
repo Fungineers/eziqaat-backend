@@ -15,6 +15,9 @@ const {
 const {
   getInActiveWorkersByArea,
 } = require("../controllers/get-inactive-workers-by-area");
+const {
+  getActiveWorkersByArea,
+} = require("../controllers/get-active-workers-by-area");
 const { getWorkerById } = require("../controllers/get-worker-by-id");
 
 const workerRouter = Router();
@@ -44,7 +47,7 @@ workerRouter.get(
 workerRouter.get(
   "/",
   authorizeRole([roles.CHAIRPERSON]),
-  getInActiveWorkersByArea
+  getActiveWorkersByArea
 );
 
 workerRouter.get(

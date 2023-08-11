@@ -21,5 +21,3 @@ module.exports.getActiveWorkersByArea = (req, res) => {
       res.status(400).json({ message: err.sqlMessage });
     });
 };
-
-module.exports = getActiveWorkersByArea;
