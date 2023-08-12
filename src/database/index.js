@@ -707,6 +707,24 @@ class DB {
     const values = [roles.DONOR];
     return this.getQuery(sql, values);
   }
+
+  async getAreaComparisonStats() {
+    const sql = `
+      SELECT DISTINCT
+      a.id AS areaId,
+      a.areaName AS areaName,
+      COUNT(d.id) AS collectionCount,
+      SUM(d.amount) AS totalCashFlow
+      FROM area a 
+      LEFT JOIN donation d
+      ON a.id = d.areaId
+      WHERE d.status = 'COLLECTED'
+      AND a.active = TRUE
+      GROUP BY d.areaId; 
+    `;
+    const values = [roles.DONOR];
+    return this.getQuery(sql, values);
+  }
 }
 
 class DBSingleton {
