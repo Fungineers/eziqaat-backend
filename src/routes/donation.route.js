@@ -34,6 +34,7 @@ const {
   addNewCollection,
 } = require("../controllers/add-new-collection");
 const { getDonationInfo } = require("../controllers/get-donation-info");
+const { getAllAreas } = require("../controllers/get-all-areas");
 
 const donationRouter = Router();
 
@@ -109,6 +110,8 @@ donationRouter.post(
   },
   addNewCollection
 );
+
+donationRouter.get("/", getAllAreas);
 
 donationRouter.get("/:donationId", verifyLogin, getDonationInfo);
 

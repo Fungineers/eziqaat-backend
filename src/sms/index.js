@@ -13,7 +13,7 @@ const apiInstance = axios.create({
 
 /**
  * Function that sends message to a valid phone number
- * @param {{phone: string; message: string; }} options
+ * @param {{ phone: string; message: string; }} options
  */
 module.exports.sendSMS = ({ phone, message }) => {
   apiInstance

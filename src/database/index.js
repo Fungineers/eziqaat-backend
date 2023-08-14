@@ -369,6 +369,15 @@ class DB {
     return this.getQuery(sql, values);
   }
 
+  async getAllAreas() {
+    const sql = `
+      SELECT * 
+      FROM area_with_chairperson
+    `;
+    const values = [];
+    return this.getQuery(sql, values);
+  }
+
   async getDonorRequests({ donorId }) {
     const sql = `
       SELECT * FROM donor_requests
@@ -723,6 +732,31 @@ class DB {
       GROUP BY d.areaId; 
     `;
     const values = [roles.DONOR];
+    return this.getQuery(sql, values);
+  }
+
+  async disableArea({ id }) {
+    const sql = `
+      UPDATE area
+      SET 
+        active = FALSE,
+        chairpersonId = NULL,
+        assignedAt = NULL
+      WHERE active = TRUE
+      AND id = ?
+    `;
+    const values = [id];
+    return this.getQuery(sql, values);
+  }
+
+  async enableArea({ id }) {
+    const sql = `
+      UPDATE area
+      SET active = TRUE
+      WHERE active = FALSE
+      AND id = ?
+    `;
+    const values = [id];
     return this.getQuery(sql, values);
   }
 }
