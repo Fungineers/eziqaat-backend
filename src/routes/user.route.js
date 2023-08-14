@@ -32,6 +32,10 @@ const {
   changePhoneValidators,
   changePhone,
 } = require("../controllers/change-phone");
+const { getChairpersons } = require("../controllers/get-chairpersons");
+const {
+  getOfficeSecretaries,
+} = require("../controllers/get-office-secretaries");
 
 const userRouter = Router();
 
@@ -42,6 +46,10 @@ userRouter.post(
   authorizeCreateUser,
   createUser
 );
+
+userRouter.get("/chairperson", getChairpersons);
+
+userRouter.get("/office-secretary", getOfficeSecretaries);
 
 userRouter.put(
   "/password",

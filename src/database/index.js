@@ -759,6 +759,25 @@ class DB {
     const values = [id];
     return this.getQuery(sql, values);
   }
+
+  async getChairperson() {
+    const sql = `
+      SELECT * 
+      FROM chairperson_data
+    `;
+    const values = [];
+    return this.getQuery(sql, values);
+  }
+
+  async getOfficeSecretaries() {
+    const sql = `
+      SELECT * 
+      FROM user_data
+      WHERE role = ?
+    `;
+    const values = [roles.OFFICE_SECRETARY];
+    return this.getQuery(sql, values);
+  }
 }
 
 class DBSingleton {
