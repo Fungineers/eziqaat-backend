@@ -778,6 +778,25 @@ class DB {
     const values = [roles.OFFICE_SECRETARY];
     return this.getQuery(sql, values);
   }
+
+  async getAllDonors() {
+    const sql = `
+      SELECT * 
+      FROM user_data
+      WHERE role = ?
+    `;
+    const values = [roles.DONOR];
+    return this.getQuery(sql, values);
+  }
+
+  async getAllDonations() {
+    const sql = `
+      SELECT * 
+      FROM donation_info
+    `;
+    const values = [];
+    return this.getQuery(sql, values);
+  }
 }
 
 class DBSingleton {
