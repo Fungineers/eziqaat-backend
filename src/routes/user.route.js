@@ -33,6 +33,7 @@ const {
   changePhone,
 } = require("../controllers/change-phone");
 const { getChairpersons } = require("../controllers/get-chairpersons");
+const { getAdminStats } = require("../controllers/get-admin-stats");
 const {
   getOfficeSecretaries,
 } = require("../controllers/get-office-secretaries");
@@ -46,6 +47,8 @@ userRouter.post(
   authorizeCreateUser,
   createUser
 );
+
+userRouter.get("/admin-stats", getAdminStats);
 
 userRouter.get("/chairperson", getChairpersons);
 

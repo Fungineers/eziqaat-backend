@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const {
-  // verifyLogin,
+  verifyLogin,
   authorizeRole,
   validateBody,
   hasAreaAssigned,
@@ -50,8 +50,8 @@ const areaRouter = Router();
 
 areaRouter.post(
   "/",
-  // verifyLogin,
-  // authorizeRole([roles.GENERAL_SECRETARY]),
+  verifyLogin,
+  authorizeRole([roles.GENERAL_SECRETARY, roles.OFFICE_SECRETARY]),
   ...createAreaValidators,
   validateBody,
   createArea
@@ -65,8 +65,8 @@ areaRouter.get("/unassigned", getUnassignedAreas);
 
 areaRouter.patch(
   "/:id",
-  // verifyLogin,
-  // authorizeRole([roles.GENERAL_SECRETARY]),
+  verifyLogin,
+  authorizeRole([roles.GENERAL_SECRETARY]),
   ...changeAreaNameValidators,
   validateBody,
   changeAreaName
@@ -74,49 +74,49 @@ areaRouter.patch(
 
 areaRouter.patch(
   "/:id/disable",
-  // verifyLogin,
-  // authorizeRole([roles.GENERAL_SECRETARY]),
+  verifyLogin,
+  authorizeRole([roles.GENERAL_SECRETARY]),
   disableArea
 );
 
 areaRouter.patch(
   "/:id/enable",
-  // verifyLogin,
-  // authorizeRole([roles.GENERAL_SECRETARY]),
+  verifyLogin,
+  authorizeRole([roles.GENERAL_SECRETARY]),
   enableArea
 );
 
 areaRouter.patch(
   "/:areaId/assign/:chairpersonId",
-  // verifyLogin,
-  // authorizeRole([roles.GENERAL_SECRETARY]),
+  verifyLogin,
+  authorizeRole([roles.GENERAL_SECRETARY]),
   assignAreaToChairperson
 );
 
 areaRouter.patch(
   "/:areaId/unassign",
-  // verifyLogin,
-  // authorizeRole([roles.GENERAL_SECRETARY]),
+  verifyLogin,
+  authorizeRole([roles.GENERAL_SECRETARY]),
   unassignAreaFromChairperson
 );
 
 areaRouter.patch(
   "/:areaId/disable",
-  // verifyLogin,
-  // authorizeRole([roles.GENERAL_SECRETARY]),
+  verifyLogin,
+  authorizeRole([roles.GENERAL_SECRETARY]),
   disableArea
 );
 
 areaRouter.patch(
   "/:areaId/enable",
-  // verifyLogin,
-  // authorizeRole([roles.GENERAL_SECRETARY]),
+  verifyLogin,
+  authorizeRole([roles.GENERAL_SECRETARY]),
   enableArea
 );
 
 areaRouter.get(
   "/stats",
-  // verifyLogin,
+  verifyLogin,
   authorizeRole([roles.CHAIRPERSON]),
   hasAreaAssigned,
   getAreaStats
@@ -124,7 +124,7 @@ areaRouter.get(
 
 areaRouter.get(
   "/stats",
-  // verifyLogin,
+  verifyLogin,
   authorizeRole([roles.CHAIRPERSON]),
   hasAreaAssigned,
   getAreaStats
@@ -132,7 +132,7 @@ areaRouter.get(
 
 areaRouter.get(
   "/daily-stats",
-  // verifyLogin,
+  verifyLogin,
   authorizeRole([roles.CHAIRPERSON]),
   hasAreaAssigned,
   getAreaDailyStats
@@ -140,7 +140,7 @@ areaRouter.get(
 
 areaRouter.get(
   "/request-stats",
-  // verifyLogin,
+  verifyLogin,
   authorizeRole([roles.CHAIRPERSON]),
   hasAreaAssigned,
   getAreaRequestStats
@@ -148,7 +148,7 @@ areaRouter.get(
 
 areaRouter.get(
   "/requested-donations",
-  // verifyLogin,
+  verifyLogin,
   authorizeRole([roles.CHAIRPERSON]),
   hasAreaAssigned,
   getAreaRequestedDonations
@@ -156,7 +156,7 @@ areaRouter.get(
 
 areaRouter.get(
   "/pending-stats",
-  // verifyLogin,
+  verifyLogin,
   authorizeRole([roles.CHAIRPERSON]),
   hasAreaAssigned,
   getAreaPendingStats
@@ -164,7 +164,7 @@ areaRouter.get(
 
 areaRouter.get(
   "/pending-donations",
-  // verifyLogin,
+  verifyLogin,
   authorizeRole([roles.CHAIRPERSON, roles.WORKER]),
   hasAreaAssigned,
   getAreaPendingDonations
@@ -172,7 +172,7 @@ areaRouter.get(
 
 areaRouter.get(
   "/accepted-donations",
-  // verifyLogin,
+  verifyLogin,
   authorizeRole([roles.CHAIRPERSON]),
   hasAreaAssigned,
   getAreaAcceptedDonations
@@ -180,7 +180,7 @@ areaRouter.get(
 
 areaRouter.get(
   "/collected-donations",
-  // verifyLogin,
+  verifyLogin,
   authorizeRole([roles.CHAIRPERSON]),
   hasAreaAssigned,
   getAreaCollectedDonations

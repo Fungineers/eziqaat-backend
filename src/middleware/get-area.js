@@ -5,7 +5,7 @@ const getArea = (req, res, next) => {
   if (user) {
     getUserArea(user)
       .then((result) => {
-        if (result.length > 0) {
+        if (result?.length > 0) {
           try {
             req.user.area = result[0][0];
           } catch (error) {

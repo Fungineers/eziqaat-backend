@@ -814,6 +814,47 @@ class DB {
     const values = [];
     return this.getQuery(sql, values);
   }
+
+  async getAdminStats() {
+    const sql = `
+      SELECT 
+        status, 
+          COUNT(id) AS count 
+      FROM donation 
+      GROUP BY status;
+      
+      SELECT 
+        SUM(amount) AS cashFlow 
+      FROM donation 
+      WHERE status = "COLLECTED";
+      
+      SELECT 
+        IFNULL(a.id, "000000000000000000") AS areaId, 
+        IFNULL(a.areaName, "[In-Office]") AS areaName, 
+        SUM(d.amount) AS cashFlow,
+        COUNT(d.id) AS collectionCount
+      FROM area a
+      RIGHT JOIN donation d 
+      ON a.id = d.areaId
+      WHERE d.status = "COLLECTED"
+      GROUP BY d.areaId;
+      
+      SELECT 
+        FLOOR(DATEDIFF(CURDATE(), collectedAt) / 7) AS weeksAgo,
+        SUM(amount) AS totalAmount,
+        COUNT(id) AS collectionCount
+      FROM 
+        donation
+      WHERE 
+        collectedAt >= DATE_SUB(CURDATE(), INTERVAL 10 WEEK)
+      GROUP BY 
+        weeksAgo
+      ORDER BY 
+        weeksAgo DESC
+      LIMIT 10;
+    `;
+    return this.getQuery(sql, []);
+  }
 }
 
 class DBSingleton {
