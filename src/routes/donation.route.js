@@ -36,6 +36,9 @@ const {
 const { getDonationInfo } = require("../controllers/get-donation-info");
 const { getAllAreas } = require("../controllers/get-all-areas");
 const { getAllDonations } = require("../controllers/get-all-donations");
+const {
+  addInhouseCollection,
+} = require("../controllers/add-pending-donation-unregistered copy");
 
 const donationRouter = Router();
 
@@ -100,6 +103,12 @@ donationRouter.patch(
     useDonationInfo(req.params.donationId)(req, res, next);
   },
   collectAcceptedDonation
+);
+
+donationRouter.post(
+  "/inhouse-collection",
+  authorizeRole([roles.OFFICE_SECRETARY]),
+  addInhouseCollection
 );
 
 donationRouter.post(

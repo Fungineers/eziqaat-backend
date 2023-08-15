@@ -243,6 +243,12 @@ class DB {
     return this.getQuery(sql, values);
   }
 
+  async addInhouseCollection({ refName, refPhone, amount }) {
+    const sql = `CALL ADD_INHOUSE_COLLECTION(?, ?, ?)`;
+    const values = [refName, refPhone, amount];
+    return this.getQuery(sql, values);
+  }
+
   async acceptPendingDonation({ donationId, workerId }) {
     const sql = `CALL ACCEPT_PENDING_DONATION(?, ?)`;
     const values = [donationId, workerId];
