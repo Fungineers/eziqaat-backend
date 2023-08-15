@@ -797,6 +797,17 @@ class DB {
     const values = [];
     return this.getQuery(sql, values);
   }
+
+  async getUnassignedAreas() {
+    const sql = `
+      SELECT * 
+      FROM area
+      WHERE chairpersonId IS NULL
+      AND active = TRUE
+    `;
+    const values = [];
+    return this.getQuery(sql, values);
+  }
 }
 
 class DBSingleton {

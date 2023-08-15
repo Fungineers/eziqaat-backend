@@ -44,6 +44,7 @@ const {
 const { getAllAreas } = require("../controllers/get-all-areas");
 const { disableArea } = require("../controllers/disable-area");
 const { enableArea } = require("../controllers/enable-area");
+const { getUnassignedAreas } = require("../controllers/get-unassigned-areas");
 
 const areaRouter = Router();
 
@@ -59,6 +60,8 @@ areaRouter.post(
 areaRouter.get("/", getAreas);
 
 areaRouter.get("/all", getAllAreas);
+
+areaRouter.get("/unassigned", getUnassignedAreas);
 
 areaRouter.patch(
   "/:id",
