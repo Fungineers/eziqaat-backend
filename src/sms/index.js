@@ -56,7 +56,7 @@ module.exports.composeCollectionSMS = ({
 }) =>
   `\n\nGreetings,\n\nYour donation of PKR ${Intl.NumberFormat("en-US").format(
     amount
-  )} has been collected by our worker ${workerName} (ID: ${workerId}) = require( the provided address: ${address} (${areaName}) on ${moment(
+  )} has been collected by our worker ${workerName} (ID: ${workerId}) from the provided address: ${address} (${areaName}) on ${moment(
     new Date()
   ).format(
     "LLL"
